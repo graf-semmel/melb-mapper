@@ -115,3 +115,14 @@ suburbInput.addEventListener("change", (e) => {
     }
   });
 });
+
+// if empty input, reset styles and map
+suburbInput.addEventListener("input", (e) => {
+  if (e.target.value === "") {
+    geojson.eachLayer(function (layer) {
+      geojson.resetStyle(layer);
+    });
+
+    map.setView(bounds.getCenter(), 10);
+  }
+});
