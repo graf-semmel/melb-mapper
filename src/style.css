@@ -11,13 +11,20 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
 }
 
@@ -25,4 +32,33 @@ body {
   height: 100vh;
   width: 100%;
   background-color: #242424;
+}
+
+#ui {
+  position: absolute;
+  width: 100%;
+  /* leaflets zoom layer is at z-index 1000 */
+  z-index: 999;
+  top: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  & input {
+    padding: 0.5rem;
+  }
+}
+
+.flex {
+  display: flex;
+
+  &.flex-row {
+    flex-direction: row;
+  }
+  &.flex-column {
+    flex-direction: column;
+  }
+  &.justify-center {
+    justify-content: center;
+  }
 }
