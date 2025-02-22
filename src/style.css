@@ -1,19 +1,50 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  text-size-adjust: none;
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
-  text-size-adjust: none;
+
+  line-height: 1.5;
+
+  /* Base Colors */
+  --color-primary: #3498db;
+  --color-secondary: #2ecc71;
+  --color-danger: #e74c3c;
+  --color-warning: #f1c40f;
+  --color-info: #1abc9c;
+  --color-light: #ecf0f1;
+  --color-dark: #2d3436;
+  --background: #242424;
+  --color: #eeeeee;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Borders */
+  --border-width: 1px;
+  --border-color: #444444;
+  --border-radius: 4px;
+
+  /* Form Controls */
+  --input-bg: #333333;
+  --input-color: var(--color);
+  --input-border: var(--border-width) solid var(--border-color);
+  --input-padding: var(--space-sm);
+  --input-focus-border-color: var(--color-primary);
+  --input-focus-box-shadow: 0 0 0 0.1rem rgba(52, 152, 219, 0.25);
+
+  color-scheme: dark;
+  color: var(--color);
+  background-color: var(--background);
 }
 
 /* Box sizing rules */
@@ -31,7 +62,7 @@ body {
 #map {
   height: 100vh;
   width: 100%;
-  background-color: #242424;
+  background-color: var(--background);
 }
 
 #ui {
@@ -43,19 +74,30 @@ body {
   left: 0;
   padding: 1rem;
   background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  color: var(--color);
+
   & input {
-    padding: 0.5rem;
+    padding: var(--input-padding);
+    border: var(--input-border);
+    border-radius: var(--border-radius);
+    color: var(--input-color);
+    background-color: var(--input-bg);
+    transition: border-color 0.1s ease, box-shadow 0.1s ease;
+    &:focus {
+      border-color: var(--input-focus-border-color);
+      box-shadow: var(--input-focus-box-shadow);
+      outline: none;
+    }
   }
 }
 
 .flex {
   display: flex;
 
-  &.flex-row {
+  &.row {
     flex-direction: row;
   }
-  &.flex-column {
+  &.column {
     flex-direction: column;
   }
   &.justify-center {
