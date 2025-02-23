@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "vite --open",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "npx @biomejs/biome format --write <files>",
+    "lint": "npx @biomejs/biome lint --write <files>",
+    "check": "npx @biomejs/biome check --write <files>"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "vite": "^6.1.0"
   },
   "dependencies": {
