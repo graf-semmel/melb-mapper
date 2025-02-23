@@ -91,9 +91,14 @@ export function Game(suburbs) {
 		});
 	}
 
+	function getCurrentRound() {
+		return currentRound;
+	}
+
 	return {
 		guessSuburb,
 		subscribe,
 		start,
+		getCurrentRound,
 	};
 }
