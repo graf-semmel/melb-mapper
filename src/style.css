@@ -151,11 +151,18 @@ h6 {
 }
 
 #summary {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease 0.5s;
+
   & hr {
     width: 100%;
     border: none;
     border-top: var(--border-width) solid var(--border-color);
     margin: var(--space-L) 0;
+  }
+  &.fade-in {
+    max-height: 100vh;
   }
 }
 

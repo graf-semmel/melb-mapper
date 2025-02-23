@@ -17,7 +17,7 @@
       <h1 id="text_round">Round 1 of 5</h1>
       <h2 id="text_suburb">Find <b>Brunswick</b></h2>
     </div>
-    <div id="summary" class="flex column align-center hidden">
+    <div id="summary" class="flex column align-center">
       <hr />
       <h1>Game Finished</h1>
       <h2 id="final_score">Your total score is <b>0</b></h2>
@@ -48,7 +48,7 @@
 
       playAgainBtn.addEventListener("click", () => {
         game.start();
-        summaryEl.classList.add("hidden");
+        summaryEl.classList.remove("fade-in");
       });
 
       function updateUI(state) {
@@ -56,7 +56,7 @@
         const score = rounds.reduce((acc, round) => acc + round.getScore(), 0);
 
         function renderSummary() {
-          summaryEl.classList.remove("hidden");
+          summaryEl.classList.add("fade-in")
           table.innerHTML = "";
           for (const round of rounds) {
             const row = document.createElement("tr");
