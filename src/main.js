@@ -24,8 +24,16 @@ const map = L.map("map", {
 	dragging: true, // Allow dragging inside the bounds
 });
 
-const colors = ["FFB200", "EB5B00", "D91656", "640D5F"];
-// const colors = ["BE3144", "219B9D", "4C1F7A", "FF8000"];
+function getCSSVarColor(key) {
+	const rootStyles = getComputedStyle(document.documentElement);
+	return rootStyles.getPropertyValue(key).trim().replace("#", "");
+}
+const colors = [
+	getCSSVarColor("--color-map-1"),
+	getCSSVarColor("--color-map-2"),
+	getCSSVarColor("--color-map-3"),
+	getCSSVarColor("--color-map-4"),
+];
 
 function style(feature) {
 	return {
@@ -57,6 +65,10 @@ function resetFeature(e) {
 }
 
 function selectFeature(e) {
+	if (game.isGameFinished()) {
+		return;
+	}
+
 	const layer = e.target;
 	const guessedSuburb = layer.feature.properties.name;
 	const correctSuburb = game.getCurrentRound().suburb;

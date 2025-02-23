@@ -100,5 +100,6 @@ export function Game(suburbs) {
 		subscribe,
 		start,
 		getCurrentRound,
+		isGameFinished,
 	};
 }

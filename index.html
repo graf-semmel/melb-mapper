@@ -64,7 +64,7 @@
               <td>${round.index}</td>
               <td>${round.suburb}</td>
               <td>${round.getGuessedSuburb()}</td>
-              <td>${round.getScore()}</td>
+              <td>${round.isGuessedCorrectly() ? "<span class=\"secondary\">✔︎<span>" : "❌"}</td>
             `;
             table.appendChild(row);
           }
@@ -75,9 +75,10 @@
         if (gameFinished) {
           console.log("game finished!");
           renderSummary();
+          return
         }
 
-        roundEl.innerHTML = `Round <strong>${currentRound.index}</strong> of ${rounds.length}`;
+        roundEl.innerHTML = `Round <strong><span class="secondary">${currentRound.index}</span></strong> of ${rounds.length}`;
         suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
       };
 

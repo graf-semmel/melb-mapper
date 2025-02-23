@@ -2,6 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-synthesis: none;
+  font-size: 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -12,15 +13,21 @@
   line-height: 1.5;
 
   /* Base Colors */
-  --color-primary: #3498db;
-  --color-secondary: #2ecc71;
+  --color-primary: rgb(105, 36, 124);
+  --color-primary-text: #ffffff;
+  --color-secondary: #fac67a;
+  --color-secondary-text: #242424;
   --color-danger: #e74c3c;
   --color-warning: #f1c40f;
   --color-info: #1abc9c;
-  --color-light: #ecf0f1;
-  --color-dark: #2d3436;
   --background: #242424;
   --color: #eeeeee;
+
+  /* Mao colors */
+  --color-map-1: var(--color-primary);
+  --color-map-2: var(--color-secondary);
+  --color-map-3: #da498d;
+  --color-map-4: #f9e6cf;
 
   /* Spacing */
   --space-XS: 0.25rem;
@@ -39,8 +46,9 @@
   --input-color: var(--color);
   --input-border: var(--border-width) solid var(--border-color);
   --input-padding: var(--space-S);
+  --input-hover-bg: #444444;
   --input-focus-border-color: var(--color-primary);
-  --input-focus-box-shadow: 0 0 0 0.1rem rgba(52, 152, 219, 0.25);
+  --input-focus-box-shadow: 0 0 0 0.2em rgba(105, 36, 124, 0.5);
 
   color-scheme: dark;
   color: var(--color);
@@ -73,7 +81,7 @@ body {
   top: 0;
   left: 0;
   padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
   color: var(--color);
 
   & input {
@@ -84,9 +92,12 @@ body {
     background-color: var(--input-bg);
     transition: border-color 0.1s ease, box-shadow 0.1s ease;
     &:focus {
-      border-color: var(--input-focus-border-color);
       box-shadow: var(--input-focus-box-shadow);
+      border-color: var(--input-focus-border-color);
       outline: none;
+    }
+    &:hover {
+      background-color: var(--input-hover-bg);
     }
   }
 }
@@ -98,11 +109,27 @@ button {
   color: var(--input-color);
   background-color: var(--input-bg);
   transition: border-color 0.1s ease, box-shadow 0.1s ease;
+  font-size: 1rem;
   cursor: pointer;
+
+  &:active {
+    background-color: var(--color-primary);
+  }
+
+  &:hover {
+    background-color: var(--input-hover-bg);
+    box-shadow: var(--input-focus-box-shadow);
+  }
+
+  &:focus {
+    border-color: var(--input-focus-border-color);
+    box-shadow: var(--input-focus-box-shadow);
+    outline: none;
+  }
 }
 
 button:hover {
-  border-color: var(--input-focus-border-color);
+  background-color: var(--input-hover-bg);
   box-shadow: var(--input-focus-box-shadow);
 }
 
@@ -153,7 +180,7 @@ h6 {
 #summary {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease 0.5s;
+  transition: max-height 0.5s ease-in-out 0.5s;
 
   & hr {
     width: 100%;
@@ -181,34 +208,18 @@ td {
   margin-bottom: var(--space-M);
 }
 
-mark {
-  animation: blink 0.2s ease-in-out;
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .flicker-correct {
-  color: green;
+  color: var(--color-primary);
   animation: flicker 0.2s ease-in-out infinite;
 }
 
 .flicker-wrong {
-  color: red;
+  color: var(--color-danger);
   animation: flicker 0.2s ease-in-out infinite;
 }
 
 .flicker-target {
-  color: var(--color-primary);
+  color: var(--color-warning);
   animation: flicker 0.2s ease-in-out infinite;
 }
 
@@ -221,5 +232,31 @@ mark {
   }
   100% {
     fill: currentColor;
+  }
+}
+
+.primary {
+  color: var(--color-primary);
+}
+
+.secondary {
+  color: var(--color-secondary);
+}
+
+mark {
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-text);
+  animation: blink 0.2s linear;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
