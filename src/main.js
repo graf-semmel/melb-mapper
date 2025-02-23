@@ -61,39 +61,38 @@ function selectFeature(e) {
 	const guessedSuburb = layer.feature.properties.name;
 	const correctSuburb = game.getCurrentRound().suburb;
 
+	game.guessSuburb(guessedSuburb);
+
 	// Zoom to the selected suburb
 	// map.fitBounds(layer.getBounds());
 
-	game.guessSuburb(guessedSuburb);
-
 	// Color the guessed suburb
-	layer.setStyle({
-		fillColor: guessedSuburb === correctSuburb ? "green" : "red",
-	});
-
-	// Reset the style in 1 second
-	setTimeout(() => {
-		geojson.resetStyle(layer);
-	}, 1000);
+	const element = layer.getElement();
+	if (element) {
+		const clazz =
+			guessedSuburb === correctSuburb ? "flicker-correct" : "flicker-wrong";
+		element.classList.add(clazz);
+		setTimeout(() => {
+			element.classList.remove(clazz);
+		}, 1000);
+	}
 
 	// Color the correct suburb
 	if (guessedSuburb !== correctSuburb) {
-		highlightCorrectSuburb(correctSuburb);
+		highlightTargetSuburb(correctSuburb);
 	}
 }
 
-function highlightCorrectSuburb(suburb) {
+function highlightTargetSuburb(suburb) {
 	geojson.eachLayer((layer) => {
 		if (layer.feature.properties.name === suburb) {
-			layer.setStyle({
-				weight: 3,
-				dashArray: "",
-				fillOpacity: 1,
-				fillColor: "white",
-			});
-			setTimeout(() => {
-				geojson.resetStyle(layer);
-			}, 1000);
+			const element = layer.getElement();
+			if (element) {
+				element.classList.add("flicker-target");
+				setTimeout(() => {
+					element.classList.remove("flicker-target");
+				}, 1000);
+			}
 		}
 	});
 }

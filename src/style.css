@@ -173,3 +173,46 @@ td {
 .mb-M {
   margin-bottom: var(--space-M);
 }
+
+mark {
+  animation: blink 0.2s ease-in-out;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.flicker-correct {
+  color: green;
+  animation: flicker 0.2s ease-in-out infinite;
+}
+
+.flicker-wrong {
+  color: red;
+  animation: flicker 0.2s ease-in-out infinite;
+}
+
+.flicker-target {
+  color: var(--color-primary);
+  animation: flicker 0.2s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0% {
+    fill: currentColor;
+  }
+  50% {
+    fill: transparent;
+  }
+  100% {
+    fill: currentColor;
+  }
+}
