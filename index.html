@@ -16,13 +16,24 @@
       <datalist id="list_suburbs"></datalist>
       <h1 id="text_round">Round 1 of 5</h1>
       <h2 id="text_suburb">Find <b>Brunswick</b></h2>
-      <h2 id="text_score">Your score is: <b>0</b></h2>
     </div>
     <div id="summary" class="flex column align-center hidden">
       <hr />
       <h1>Game Finished</h1>
       <h2 id="final_score">Your total score is <b>0</b></h2>
-      <button id="play_again">Play Again</button>
+      <table id="table_summary">
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>Suburb</th>
+            <th>Guess</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <hr />
+      <button id="play_again" class="mb-M">Play Again</button>
     </div>
 
     <script type="module">
@@ -30,22 +41,44 @@
 
       const roundEl = document.getElementById("text_round");
       const suburbEl = document.getElementById("text_suburb");
-      const scoreEl = document.getElementById("text_score");
+      const scoreEl = document.getElementById("final_score");
       const summaryEl = document.getElementById("summary");
+      const table = document.querySelector("#table_summary tbody");
+      const playAgainBtn = document.getElementById("play_again");
+
+      playAgainBtn.addEventListener("click", () => {
+        game.start();
+        summaryEl.classList.add("hidden");
+      });
 
       function updateUI(state) {
         const { currentRound, rounds, gameFinished } = state;
         const score = rounds.reduce((acc, round) => acc + round.getScore(), 0);
 
+        function renderSummary() {
+          summaryEl.classList.remove("hidden");
+          table.innerHTML = "";
+          for (const round of rounds) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${round.index}</td>
+              <td>${round.suburb}</td>
+              <td>${round.getGuessedSuburb()}</td>
+              <td>${round.getScore()}</td>
+            `;
+            table.appendChild(row);
+          }
+
+          scoreEl.innerHTML = `Your final score is <strong>${score}</strong>`;
+        }
+
         if (gameFinished) {
           console.log("game finished!");
-          summaryEl.classList.remove("hidden");
-          return;
+          renderSummary();
         }
 
         roundEl.innerHTML = `Round <strong>${currentRound.index}</strong> of ${rounds.length}`;
         suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
-        scoreEl.innerHTML = `Your score is <strong>${score}</strong>`;
       };
 
       game.subscribe((state) => {

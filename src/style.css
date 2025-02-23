@@ -23,11 +23,11 @@
   --color: #eeeeee;
 
   /* Spacing */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
+  --space-XS: 0.25rem;
+  --space-S: 0.5rem;
+  --space-M: 1rem;
+  --space-L: 2rem;
+  --space-XL: 4rem;
 
   /* Borders */
   --border-width: 1px;
@@ -38,7 +38,7 @@
   --input-bg: #333333;
   --input-color: var(--color);
   --input-border: var(--border-width) solid var(--border-color);
-  --input-padding: var(--space-sm);
+  --input-padding: var(--space-S);
   --input-focus-border-color: var(--color-primary);
   --input-focus-box-shadow: 0 0 0 0.1rem rgba(52, 152, 219, 0.25);
 
@@ -91,6 +91,27 @@ body {
   }
 }
 
+button {
+  padding: var(--input-padding);
+  border: var(--input-border);
+  border-radius: var(--border-radius);
+  color: var(--input-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--input-focus-border-color);
+  box-shadow: var(--input-focus-box-shadow);
+}
+
+button:focus {
+  border-color: var(--input-focus-border-color);
+  box-shadow: var(--input-focus-box-shadow);
+  outline: none;
+}
+
 .flex {
   display: flex;
 
@@ -132,5 +153,23 @@ h6 {
 #summary {
   & hr {
     width: 100%;
+    border: none;
+    border-top: var(--border-width) solid var(--border-color);
+    margin: var(--space-L) 0;
   }
+}
+
+table {
+  border-collapse: collapse;
+  margin-top: var(--space-S);
+}
+
+th,
+td {
+  padding: var(--space-S);
+  text-align: center;
+}
+
+.mb-M {
+  margin-bottom: var(--space-M);
 }
