@@ -16,13 +16,18 @@
     <div
       id="ui"
       class="flex row justify-center">
-      <input
-        type="text"
-        id="input_suburbs"
-        placeholder="Enter a suburb"
-        list="list_suburbs" />
-      <datalist id="list_suburbs"></datalist>
+      <div class="flex column align-center">
+        <input
+          type="text"
+          id="input_suburbs"
+          placeholder="Enter a suburb"
+          list="list_suburbs" />
+        <datalist id="list_suburbs"></datalist>
+        <h1 id="text_round">Round 1 of 5</h1>
+        <h2 id>Find <b id="text_suburb">Brunswick</b></h2>
+      </div>
     </div>
+
     <script
       type="module"
       src="/src/main.js"></script>

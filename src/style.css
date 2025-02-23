@@ -31,7 +31,7 @@
 
   /* Borders */
   --border-width: 1px;
-  --border-color: #444444;
+  --border-color: #555555;
   --border-radius: 4px;
 
   /* Form Controls */
@@ -73,7 +73,7 @@ body {
   top: 0;
   left: 0;
   padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   color: var(--color);
 
   & input {
@@ -103,4 +103,21 @@ body {
   &.justify-center {
     justify-content: center;
   }
+  &.justify-between {
+    justify-content: space-between;
+  }
+  &.align-center {
+    align-items: center;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
 }
