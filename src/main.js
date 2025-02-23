@@ -2,8 +2,8 @@ import "./style.css";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import suburbsRaw from "./suburbs-name.json" assert { type: "json" };
-
-const suburbs = suburbsRaw.features.filter(
+import { Game } from "./game";
+const features = suburbsRaw.features.filter(
 	(feature) => feature.properties.name !== undefined,
 );
 
@@ -73,7 +73,7 @@ function onEachFeature(feature, layer) {
 	});
 }
 
-const geojson = L.geoJson(suburbs, {
+const geojson = L.geoJson(features, {
 	style: style,
 	onEachFeature: onEachFeature,
 }).addTo(map);
@@ -86,9 +86,9 @@ map.eachLayer((layer) => {
 });
 
 const suburbsDataList = document.getElementById("list_suburbs");
-for (const suburb of suburbs) {
+for (const feature of features) {
 	const option = document.createElement("option");
-	option.value = suburb.properties.name;
+	option.value = feature.properties.name;
 	suburbsDataList.appendChild(option);
 }
 
@@ -132,85 +132,8 @@ suburbInput.addEventListener("input", (e) => {
 	}
 });
 
-function Game(features) {
-	const suburbs = features.map((feature) => ({
-		name: feature.properties.name,
-	}));
-	const rounds = Array.from({ length: 5 }, (_, i) => ({
-		index: i + 1,
-		suburb: suburbs[Math.floor(Math.random() * suburbs.length)].name,
-		score: 0,
-	}));
-	let currentRound = rounds[0];
-
-	const render = Renderer();
-
-	function nextRound() {
-		const nextIndex = currentRound.index + 1;
-		if (nextIndex <= rounds.length) {
-			currentRound = rounds[nextIndex - 1];
-		}
-
-		render({
-			currentRound,
-			gameFinished: isGameFinished(),
-		});
-	}
-
-	function guessSuburb(guess) {
-		if (isGameFinished()) {
-			console.log("game is finished!");
-			return;
-		}
-
-		console.log("guessed suburb:", guess);
-		if (guess === currentRound.suburb) {
-			currentRound.score++;
-			console.log("correct!");
-		} else {
-			console.log("wrong!");
-		}
-		nextRound();
-	}
-
-	function isGameFinished() {
-		return currentRound.index > rounds;
-	}
-
-	render({
-		currentRound: rounds[0],
-		rounds,
-		gameFinished: false,
-	});
-
-	return {
-		guessSuburb,
-	};
-}
+const suburbs = features.map((feature) => ({
+	name: feature.properties.name,
+}));
 
 const game = Game(suburbs);
-
-function Renderer() {
-	const roundEl = document.getElementById("text_round");
-	const suburbEl = document.getElementById("text_suburb");
-	let state = {};
-
-	return (newState) => {
-		state = {
-			...state,
-			...newState,
-		};
-
-		console.log("state", state);
-
-		const { currentRound, rounds, gameFinished } = state;
-		if (gameFinished) {
-			console.log("game finished!");
-			return;
-		}
-		roundEl.textContent = `Round ${currentRound.index} of ${rounds.length}`;
-		suburbEl.textContent = currentRound.suburb;
-		const score = rounds.reduce((acc, round) => acc + round.score, 0);
-		console.log("total score:", score);
-	};
-}
