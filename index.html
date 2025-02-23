@@ -1,35 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="/vite.svg" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="map"></div>
-    <div
-      id="ui"
-      class="flex row justify-center">
-      <div class="flex column align-center">
-        <input
-          type="text"
-          id="input_suburbs"
-          placeholder="Enter a suburb"
-          list="list_suburbs" />
-        <datalist id="list_suburbs"></datalist>
-        <h1 id="text_round">Round 1 of 5</h1>
-        <h2 id>Find <b id="text_suburb">Brunswick</b></h2>
-      </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <div id="map"></div>
+  <div id="ui" class="flex column justify-center">
+    <div class="flex column align-center">
+      <input type="text" id="input_suburbs" placeholder="Enter a suburb" list="list_suburbs" />
+      <datalist id="list_suburbs"></datalist>
+      <h1 id="text_round">Round 1 of 5</h1>
+      <h2 id="text_suburb">Find <b>Brunswick</b></h2>
+      <h2 id="text_score">Your score is: <b>0</b></h2>
+    </div>
+    <div id="summary" class="flex column align-center hidden">
+      <hr />
+      <h1>Game Finished</h1>
+      <h2 id="final_score">Your total score is <b>0</b></h2>
+      <button id="play_again">Play Again</button>
     </div>
 
-    <script
-      type="module"
-      src="/src/main.js"></script>
-  </body>
+    <script type="module">
+      import { game } from './src/main.js';
+
+      const roundEl = document.getElementById("text_round");
+      const suburbEl = document.getElementById("text_suburb");
+      const scoreEl = document.getElementById("text_score");
+      const summaryEl = document.getElementById("summary");
+
+      function updateUI(state) {
+        const { currentRound, rounds, gameFinished } = state;
+        const score = rounds.reduce((acc, round) => acc + round.getScore(), 0);
+
+        if (gameFinished) {
+          console.log("game finished!");
+          summaryEl.classList.remove("hidden");
+          return;
+        }
+
+        roundEl.innerHTML = `Round <strong>${currentRound.index}</strong> of ${rounds.length}`;
+        suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
+        scoreEl.innerHTML = `Your score is <strong>${score}</strong>`;
+      };
+
+      game.subscribe((state) => {
+        updateUI(state);
+      });
+
+      game.start();
+
+    </script>
+</body>
+
 </html>

@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import suburbsRaw from "./suburbs-name.json" assert { type: "json" };
 import { Game } from "./game";
+
 const features = suburbsRaw.features.filter(
 	(feature) => feature.properties.name !== undefined,
 );
@@ -137,3 +138,5 @@ const suburbs = features.map((feature) => ({
 }));
 
 const game = Game(suburbs);
+
+export { game };
