@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
-    "build": "vite build",
-    "preview": "vite preview",
+    "build": "vite build --base \"/melb-mapper\"",
+    "preview": "vite --open preview",
     "format": "npx @biomejs/biome format --write <files>",
     "lint": "npx @biomejs/biome lint --write <files>",
     "check": "npx @biomejs/biome check --write <files>"
