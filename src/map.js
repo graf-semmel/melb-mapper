@@ -1,13 +1,43 @@
 import "./style.css";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import suburbsRaw from "./suburbs-name.json" assert { type: "json" };
-import { Game } from "./game";
-import { setupSearch } from "./search";
 
-const features = suburbsRaw.features.filter(
-	(feature) => feature.properties.name !== undefined,
-);
+const tileLayers = {
+	openstreetmap: {
+		url: `https://tile.openstreetmap.org/{z}/{x}/{y}${L.Browser.retina ? "@2x.png" : ".png"}`,
+		attribution:
+			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+	},
+	carto_dark: {
+		url: `https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}${L.Browser.retina ? "@2x.png" : ".png"}`,
+		attribution:
+			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		subdomains: "abcd",
+	},
+	carto_light: {
+		url: `https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}${L.Browser.retina ? "@2x.png" : ".png"}`,
+		attribution:
+			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		subdomains: "abcd",
+	},
+};
+
+const colors = ["#111111", "#222222", "#333333", "#444444"];
+
+function getColor(feature) {
+	const index = feature.properties.name.length % options.colors.length;
+	return options.colors[index];
+}
+
+function getCSSVarColor(key) {
+	const rootStyles = getComputedStyle(document.documentElement);
+	return rootStyles.getPropertyValue(key).trim().replace("#", "");
+}
+
+const options = {
+	tileLayer: tileLayers.carto_dark,
+	colors,
+};
 
 const bounds = L.latLngBounds(
 	L.latLng(-38.8, 144.0), // Southwest corner
@@ -18,54 +48,25 @@ const map = L.map("map", {
 	center: bounds.getCenter(),
 	zoom: 10,
 	maxZoom: 13,
-	minZoom: 10,
+	minZoom: 9,
 	maxBounds: bounds, // Restrict the map's view to these bounds
 	maxBoundsViscosity: 1.0, // Ensure the user cannot drag outside the bounds
 	dragging: true, // Allow dragging inside the bounds
 });
 
-// L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-// attribution:
-// '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-// }).addTo(map);
-
-L.tileLayer(
-	`https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}${L.Browser.retina ? "@2x.png" : ".png"}`,
-	{
-		attribution:
-			'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
-		subdomains: "abcd",
-	},
-).addTo(map);
-
-function getCSSVarColor(key) {
-	const rootStyles = getComputedStyle(document.documentElement);
-	return rootStyles.getPropertyValue(key).trim();
-}
-const colors = [
-	getCSSVarColor("--color-map-1"),
-	getCSSVarColor("--color-map-2"),
-	getCSSVarColor("--color-map-3"),
-	getCSSVarColor("--color-map-4"),
-];
-
-function getRandColor(name) {
-	return getCSSVarColor("--color-secondary");
-	return colors[name.length % 4];
-}
-
-function getRandFillColor(name) {
-	// return getCSSVarColor("--color-primary");
-	return colors[name.length % 4];
-}
+L.tileLayer(options.tileLayer.url, {
+	attribution: options.tileLayer.attribution,
+	subdomains: options.tileLayer.subdomains,
+}).addTo(map);
 
 function style(feature) {
 	return {
 		weight: 1,
-		opacity: 0.3,
-		color: getRandColor(feature.properties.name),
-		fillOpacity: 0.3,
-		fillColor: getRandFillColor(feature.properties.name),
+		opacity: 1,
+		color: getColor(feature),
+		dashArray: "5",
+		fillOpacity: 0.2,
+		fillColor: "#333",
 	};
 }
 
@@ -73,8 +74,9 @@ function highlightFeature(e) {
 	const layer = e.target;
 
 	layer.setStyle({
-		opacity: 1,
-		fillOpacity: 0.8,
+		weight: 3,
+		dashArray: "",
+		fillOpacity: 1,
 	});
 
 	if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -133,9 +135,9 @@ function highlightTargetSuburb(suburb) {
 
 function onEachFeature(feature, layer) {
 	layer.on({
-		// mouseover: highlightFeature,
-		// mouseout: resetFeature,
-		// click: selectFeature,
+		mouseover: highlightFeature,
+		mouseout: resetFeature,
+		click: selectFeature,
 	});
 }
 
@@ -144,25 +146,9 @@ const geojson = L.geoJson(features, {
 	onEachFeature: onEachFeature,
 }).addTo(map);
 
-geojson.setStyle({
-	weight: 5,
-	fillOpacity: 1,
-	color: getCSSVarColor("--color-primary"),
-	fillColor: getCSSVarColor("--color-primary"),
-});
-
 // Remove any existing markers
 map.eachLayer((layer) => {
 	if (layer instanceof L.Marker) {
 		map.removeLayer(layer);
 	}
 });
-
-const suburbs = features.map((feature) => ({
-	name: feature.properties.name,
-}));
-const game = Game(suburbs);
-
-setupSearch(features, geojson, map, bounds, game);
-
-export { game };

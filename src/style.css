@@ -28,6 +28,10 @@
   --color-map-2: var(--color-secondary);
   --color-map-3: #da498d;
   --color-map-4: #f9e6cf;
+  /* --color-map-1: #333333; */
+  /* --color-map-2: #444444; */
+  /* --color-map-3: #555555; */
+  /* --color-map-4: #666666; */
 
   /* Spacing */
   --space-XS: 0.25rem;
