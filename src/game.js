@@ -12,8 +12,9 @@ function Round(index, suburb) {
 				score++;
 			}
 			guessedSuburb = guess;
+			return score > 0;
 		},
-		isGuessedCorrectly: () => suburb === guessedSuburb,
+		isGuessedCorrectly: () => score > 0,
 		getScore: () => score,
 		getGuessedSuburb: () => guessedSuburb,
 	};
