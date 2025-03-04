@@ -284,22 +284,21 @@ mark {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  animation: fadeIn 2s ease-in-out;
+  animation: textZ 2s ease-in-out forwards;
+  color: var(--color-secondary);
 }
 
-.neonText {
-  color: #fac67a;
-  text-shadow: 0 0 0px #fac67a, 0 0 50px #fac67a, 20px 20px 0 #000,
-    20px 20px 5px #000, 20px 20px 10px #000;
-}
-
-@keyframes fadeIn {
+@keyframes textZ {
   0% {
+    transform: translateY(20px) translateX(0px);
     opacity: 0;
-    transform: translateY(-20px);
+    text-shadow: 0 0 1px currentColor, 0 0 20px currentColor, 0 0 0px #000000,
+      0 0 5px #000000;
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor,
+      20px 20px 5px #000000, 20px 20px 10px #000000;
+    transform: translateY(0px) translateX(0px);
   }
 }
