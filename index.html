@@ -11,10 +11,18 @@
 <body>
   <div id="map"></div>
   <section id="hero" class="flex column justify-center align-center">
-    <h1 class="neonText">MELBMAPPER</h1>
-    <button id="start_game" class="neonText">Start Game</button>
+    <h1 class="mb-M">MELBMAPPER</h1>
+    <button id="start_game">Start Game</button>
+    <script type="module">
+      const startGameBtn = document.getElementById("start_game");
+
+      startGameBtn.addEventListener("click", () => {
+        document.getElementById("hero").classList.add("hidden");
+        document.getElementById("game").classList.remove("hidden");
+      });
+    </script>
   </section>
-  <section id="ui" class="flex column justify-center hidden">
+  <section id="game" class="flex column justify-center hidden">
     <div class="flex column align-center">
       <input type="text" id="input_suburbs" placeholder="Enter a suburb" list="list_suburbs" class="hidden" />
       <datalist id="list_suburbs"></datalist>

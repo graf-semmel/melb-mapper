@@ -77,7 +77,7 @@ body {
   background-color: var(--background);
 }
 
-#ui {
+#game {
   position: absolute;
   width: 100%;
   /* leaflets zoom layer is at z-index 1000 */
@@ -107,40 +107,22 @@ body {
 }
 
 button {
+  color: var(--color-secondary);
+  background: transparent;
   padding: var(--input-padding);
-  border: var(--input-border);
+  border: solid 1px transparent;
   border-radius: var(--border-radius);
-  color: var(--input-color);
-  background-color: var(--input-bg);
-  transition: border-color 0.1s ease, box-shadow 0.1s ease;
   font-size: 1rem;
   cursor: pointer;
 
-  &:active {
-    background-color: var(--color-primary);
-  }
-
   &:hover {
-    background-color: var(--input-hover-bg);
-    box-shadow: var(--input-focus-box-shadow);
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 currentColor, 0 0 0px currentColor, 0 0 20px currentColor;
   }
 
   &:focus {
-    border-color: var(--input-focus-border-color);
-    box-shadow: var(--input-focus-box-shadow);
-    outline: none;
+    outline-color: var(--color-secondary);
   }
-}
-
-button:hover {
-  background-color: var(--input-hover-bg);
-  box-shadow: var(--input-focus-box-shadow);
-}
-
-button:focus {
-  border-color: var(--input-focus-border-color);
-  box-shadow: var(--input-focus-box-shadow);
-  outline: none;
 }
 
 .flex {
@@ -277,28 +259,65 @@ mark {
   justify-content: center;
   align-items: center;
   text-align: center;
+
+  & h1 {
+    --color-glow: var(--color-secondary);
+    --color-shadow: #000000;
+    font-size: 5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    animation: hover-glow 1s ease-in-out forwards;
+    color: var(--color-secondary);
+  }
+
+  &.hidden {
+    & h1 {
+      animation: hover-glow-reverse 1s ease-in-out forwards;
+    }
+    & button {
+      animation: fade-out 1s ease-in-out forwards;
+    }
+  }
 }
 
-#hero h1 {
-  font-size: 5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  animation: textZ 2s ease-in-out forwards;
-  color: var(--color-secondary);
-}
-
-@keyframes textZ {
+@keyframes hover-glow {
   0% {
     transform: translateY(20px) translateX(0px);
     opacity: 0;
-    text-shadow: 0 0 1px currentColor, 0 0 20px currentColor, 0 0 0px #000000,
-      0 0 5px #000000;
+    text-shadow: 0 0 1px var(--color-glow), 0 0 20px var(--color-glow),
+      0 0 0px var(--color-shadow), 0 0 5px var(--color-shadow);
   }
   100% {
     opacity: 1;
-    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor,
-      20px 20px 5px #000000, 20px 20px 10px #000000;
+    text-shadow: 0 0 20px var(--color-glow), 0 0 40px var(--color-glow),
+      20px 20px 5px var(--color-shadow), 20px 20px 10px var(--color-shadow);
     transform: translateY(0px) translateX(0px);
+  }
+}
+
+@keyframes hover-glow-reverse {
+  0% {
+    opacity: 1;
+    text-shadow: 0 0 20px var(--color-glow), 0 0 40px var(--color-glow),
+      20px 20px 5px var(--color-shadow), 20px 20px 10px var(--color-shadow);
+    transform: translateY(0px) translateX(0px);
+  }
+  100% {
+    display: none;
+    transform: translateY(20px) translateX(0px);
+    opacity: 0;
+    text-shadow: 0 0 1px var(--color-glow), 0 0 20px var(--color-glow),
+      0 0 0px var(--color-shadow), 0 0 5px var(--color-shadow);
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
   }
 }
