@@ -23,7 +23,7 @@ const colors = [
 ];
 
 function showSuburbs() {
-	const { map, geoJson } = createMap([], {
+	const { map, geoJson } = createMap(features, {
 		colors,
 		onSelectLayer: (layer) => {
 			if (game.isGameFinished()) {

@@ -304,7 +304,6 @@ mark {
     transform: translateY(0px) translateX(0px);
   }
   100% {
-    display: none;
     transform: translateY(20px) translateX(0px);
     opacity: 0;
     text-shadow: 0 0 1px var(--color-glow), 0 0 20px var(--color-glow),
@@ -318,6 +317,5 @@ mark {
   }
   100% {
     opacity: 0;
-    display: none;
   }
 }

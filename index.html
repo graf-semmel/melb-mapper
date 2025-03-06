@@ -14,11 +14,18 @@
     <h1 class="mb-M">MELBMAPPER</h1>
     <button id="start_game">Start Game</button>
     <script type="module">
+      import { game } from './src/main.js';
+
       const startGameBtn = document.getElementById("start_game");
 
       startGameBtn.addEventListener("click", () => {
-        document.getElementById("hero").classList.add("hidden");
-        document.getElementById("game").classList.remove("hidden");
+        const heroSection = document.getElementById("hero");
+        heroSection.classList.add("hidden");
+
+        heroSection.addEventListener("animationend", () => {
+          heroSection.style.display = "none";
+          document.getElementById("game").classList.remove("hidden");
+        }, { once: true });
       });
     </script>
   </section>
