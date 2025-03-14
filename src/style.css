@@ -85,7 +85,6 @@ body {
   top: 0;
   left: 0;
   padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.8);
   color: var(--color);
 
   & input {
@@ -177,17 +176,15 @@ h6 {
   &.fade-in {
     max-height: 100vh;
   }
-}
-
-table {
-  border-collapse: collapse;
-  margin-top: var(--space-S);
-}
-
-th,
-td {
-  padding: var(--space-S);
-  text-align: center;
+  & table {
+    border-collapse: collapse;
+    margin-top: var(--space-S);
+    & th,
+    td {
+      padding: var(--space-S);
+      text-align: center;
+    }
+  }
 }
 
 .mb-M {
