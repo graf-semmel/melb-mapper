@@ -263,7 +263,8 @@ mark {
   & h1 {
     --color-glow: var(--color-secondary);
     --color-shadow: #000000;
-    font-size: 5rem;
+    width: 100%;
+    font-size: clamp(1rem, 10vw, 5rem);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
