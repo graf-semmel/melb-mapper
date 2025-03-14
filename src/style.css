@@ -113,10 +113,16 @@ button {
   border-radius: var(--border-radius);
   font-size: 1rem;
   cursor: pointer;
+  transition: all 0.2s;
+
+  --color-glow: var(--color-secondary);
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --translate: 1rem;
 
   &:hover {
-    border-color: var(--color-secondary);
-    box-shadow: 0 0 0 currentColor, 0 0 0px currentColor, 0 0 20px currentColor;
+    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
+      var(--translate) var(--translate) 5px var(--color-shadow),
+      var(--translate) var(--translate) 10px var(--color-shadow);
   }
 
   &:focus {
@@ -258,8 +264,6 @@ mark {
   text-align: center;
 
   & h1 {
-    --color-glow: var(--color-secondary);
-    --color-shadow: #000000;
     width: 100%;
     font-size: clamp(1rem, 10vw, 5rem);
     font-weight: 700;
@@ -267,6 +271,11 @@ mark {
     letter-spacing: 0.1em;
     animation: hover-glow 1s ease-in-out forwards;
     color: var(--color-secondary);
+    opacity: 0;
+    text-shadow: none;
+
+    --color-glow: var(--color-secondary);
+    --color-shadow: rgba(0, 0, 0, 0.5);
   }
 
   &.hidden {
@@ -274,46 +283,33 @@ mark {
       animation: hover-glow-reverse 1s ease-in-out forwards;
     }
     & button {
-      animation: fade-out 1s ease-in-out forwards;
+      transition: opacity 1s ease-in-out;
+      opacity: 0;
     }
   }
 }
 
 @keyframes hover-glow {
-  0% {
-    transform: translateY(20px) translateX(0px);
-    opacity: 0;
-    text-shadow: 0 0 1px var(--color-glow), 0 0 20px var(--color-glow),
-      0 0 0px var(--color-shadow), 0 0 5px var(--color-shadow);
-  }
   100% {
     opacity: 1;
-    text-shadow: 0 0 20px var(--color-glow), 0 0 40px var(--color-glow),
-      20px 20px 5px var(--color-shadow), 20px 20px 10px var(--color-shadow);
-    transform: translateY(0px) translateX(0px);
+    transform: translateY(-5px);
+    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
+      0 0 40px var(--color-glow), 20px 20px 5px var(--color-shadow),
+      20px 20px 10px var(--color-shadow);
   }
 }
 
 @keyframes hover-glow-reverse {
   0% {
+    transform: translateY(-5px);
     opacity: 1;
-    text-shadow: 0 0 20px var(--color-glow), 0 0 40px var(--color-glow),
-      20px 20px 5px var(--color-shadow), 20px 20px 10px var(--color-shadow);
-    transform: translateY(0px) translateX(0px);
+    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
+      0 0 40px var(--color-glow), 20px 20px 5px var(--color-shadow),
+      20px 20px 10px var(--color-shadow);
   }
   100% {
-    transform: translateY(20px) translateX(0px);
+    transform: translateY(0);
     opacity: 0;
-    text-shadow: 0 0 1px var(--color-glow), 0 0 20px var(--color-glow),
-      0 0 0px var(--color-shadow), 0 0 5px var(--color-shadow);
-  }
-}
-
-@keyframes fade-out {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
+    text-shadow: none;
   }
 }
