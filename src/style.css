@@ -111,8 +111,10 @@ button {
   padding: var(--input-padding);
   border: solid 1px transparent;
   border-radius: var(--border-radius);
-  font-size: 1rem;
+  font-size: 1.2rem;
   cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
   transition: all 0.2s;
 
   --color-glow: var(--color-secondary);
@@ -171,30 +173,37 @@ h6 {
 #summary {
   max-height: 0;
   overflow: hidden;
+  gap: var(--space-M);
+  background-color: #000000a0;
+  margin-block: var(--space-M);
   transition: max-height 0.5s ease-in-out 0.5s;
 
-  & hr {
-    width: 100%;
-    border: none;
-    border-top: var(--border-width) solid var(--border-color);
-    margin: var(--space-L) 0;
-  }
   &.fade-in {
     max-height: 100vh;
   }
   & table {
     border-collapse: collapse;
-    margin-top: var(--space-S);
     & th,
     td {
       padding: var(--space-S);
       text-align: center;
     }
   }
+  & hgroup {
+    margin-top: var(--space-L);
+    text-align: center;
+  }
+  & button {
+    margin-bottom: var(--space-L);
+  }
 }
 
 .mb-M {
   margin-bottom: var(--space-M);
+}
+
+.mt-M {
+  margin-top: var(--space-M);
 }
 
 .flicker-correct {
