@@ -42,7 +42,7 @@
       <main class="flex column align-center">
         <hgroup>
           <h1>Game Finished</h1>
-          <h2 id="final_score">Your total score is <b>0</b></h2>
+          <h2 id="final_score">Your total score is <strong>0</strong></h2>
         </hgroup>
         <table id="table_summary">
           <thead>
@@ -65,13 +65,13 @@
       const roundEl = document.getElementById("text_round");
       const suburbEl = document.getElementById("text_suburb");
       const scoreEl = document.getElementById("final_score");
-      const summaryEl = document.getElementById("summary");
+      const summaryDialog = document.getElementById("summary");
       const table = document.querySelector("#table_summary tbody");
       const playAgainBtn = document.getElementById("play_again");
 
       playAgainBtn.addEventListener("click", () => {
         game.start();
-        summaryEl.close();
+        summaryDialog.close();
       });
 
       function updateUI(state) {
@@ -97,7 +97,7 @@
         if (gameFinished) {
           console.log("game finished!");
           renderSummary();
-          summaryEl.showModal();
+          summaryDialog.showModal();
           return;
         }
 

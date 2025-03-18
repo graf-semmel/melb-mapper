@@ -219,6 +219,11 @@ dialog:open {
   & hgroup {
     text-align: center;
   }
+  & #final_score {
+    & strong {
+      color: var(--color-secondary);
+    }
+  }
 }
 
 .mb-M {
