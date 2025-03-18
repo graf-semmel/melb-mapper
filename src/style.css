@@ -116,6 +116,7 @@ button {
   font-weight: 600;
   text-transform: uppercase;
   transition: all 0.2s;
+  user-select: none;
 
   --color-glow: var(--color-secondary);
   --color-shadow: rgba(0, 0, 0, 0.5);
@@ -313,6 +314,7 @@ mark {
     color: var(--color-secondary);
     opacity: 0;
     text-shadow: none;
+    user-select: none;
 
     --color-glow: var(--color-secondary);
     --color-shadow: rgba(0, 0, 0, 0.5);
