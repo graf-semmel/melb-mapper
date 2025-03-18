@@ -80,8 +80,8 @@ body {
 #game {
   position: absolute;
   width: 100%;
-  /* leaflets zoom layer is at z-index 1000 */
-  z-index: 999;
+  /* leaflets zoom and attribution layer is at z-index 1000 */
+  z-index: 9999;
   top: 0;
   left: 0;
   padding: 1rem;
@@ -261,7 +261,7 @@ mark {
 
 #hero {
   position: absolute;
-  z-index: 999;
+  z-index: 9999;
   color: white;
   top: 0;
   left: 0;
