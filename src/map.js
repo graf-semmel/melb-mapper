@@ -106,6 +106,7 @@ function createMap(features, options = {}) {
     layer.on({
       mouseover: onMouseOver,
       mouseout: onMouseOut,
+      mouseup: onMouseOut,
       click: onClick,
     });
   }

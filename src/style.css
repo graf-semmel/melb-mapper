@@ -230,17 +230,20 @@ dialog:open {
 }
 
 .flicker-correct {
-  color: var(--color-primary);
-  animation: flicker 0.2s ease-in-out infinite;
+  color: var(--color-info);
+  fill-opacity: 0.8;
+  animation: flicker 0.5s ease-in-out infinite;
 }
 
 .flicker-wrong {
   color: var(--color-danger);
+  fill-opacity: 0.8;
   animation: flicker 0.2s ease-in-out infinite;
 }
 
 .flicker-target {
   color: var(--color-warning);
+  fill-opacity: 0.8;
   animation: flicker 0.2s ease-in-out infinite;
 }
 
