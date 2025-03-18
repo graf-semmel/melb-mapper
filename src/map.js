@@ -73,7 +73,7 @@ function createMap(features, options = {}) {
     zoom: 10,
     maxZoom: 13,
     minZoom: 9,
-    maxBounds: options.bounds, // Restrict the map's view to these bounds
+    maxBounds: mergedOptions.bounds, // Restrict the map's view to these bounds
     maxBoundsViscosity: 1.0, // Ensure the user cannot drag outside the bounds
     dragging: true, // Allow dragging inside the bounds
   });

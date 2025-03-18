@@ -170,16 +170,43 @@ h6 {
   display: none;
 }
 
-#summary {
-  max-height: 0;
-  overflow: hidden;
-  gap: var(--space-M);
-  background-color: #000000a0;
-  margin-block: var(--space-M);
-  transition: max-height 0.5s ease-in-out 0.5s;
+dialog {
+  padding: 0;
+  opacity: 0;
+  transition: all 0.4s ease-in-out allow-discrete;
+  box-shadow: none;
+  background-color: #000000bb;
+  border: none;
+  --color-glow: var(--color-secondary);
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --translate: 2rem;
+}
 
-  &.fade-in {
-    max-height: 100vh;
+dialog:open {
+  opacity: 1;
+  box-shadow: 0 0 1px var(--color-glow),
+    var(--translate) var(--translate) 10px var(--color-shadow),
+    var(--translate) var(--translate) 20px var(--color-shadow);
+}
+
+@media (max-width: 768px) {
+  dialog {
+    max-width: 100%;
+    max-height: 100%;
+    background: #000000dd;
+  }
+}
+
+@starting-style {
+  dialog:open {
+    opacity: 0;
+  }
+}
+
+#summary {
+  & main {
+    gap: var(--space-M);
+    padding: var(--space-M);
   }
   & table {
     border-collapse: collapse;
@@ -190,11 +217,7 @@ h6 {
     }
   }
   & hgroup {
-    margin-top: var(--space-L);
     text-align: center;
-  }
-  & button {
-    margin-bottom: var(--space-L);
   }
 }
 
