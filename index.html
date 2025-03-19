@@ -95,9 +95,11 @@
         }
 
         if (gameFinished) {
-          console.log("game finished!");
-          renderSummary();
-          summaryDialog.showModal();
+          console.debug("game finished!");
+          setTimeout(() => {
+            summaryDialog.showModal();
+            renderSummary();
+          }, 600);
           return;
         }
 
