@@ -122,7 +122,6 @@ function createMap(features, options = {}) {
   const geoJson = L.geoJson(features, {
     style: defaultStyle,
     onEachFeature: onEachFeature,
-    interactive: false,
   }).addTo(map);
 
   map.eachLayer((layer) => {
@@ -148,5 +147,25 @@ function createMap(features, options = {}) {
 
   return { map, geoJson, zoomToFeature, resetZoom };
 }
+
+L.Layer.prototype.setInteractive = function (interactive) {
+  if (this.getLayers) {
+    for (const layer of this.getLayers()) {
+      layer.setInteractive(interactive);
+    }
+    return;
+  }
+  if (!this._path) {
+    return;
+  }
+
+  this.options.interactive = interactive;
+
+  if (interactive) {
+    L.DomUtil.addClass(this._path, "leaflet-interactive");
+  } else {
+    L.DomUtil.removeClass(this._path, "leaflet-interactive");
+  }
+};
 
 export { createMap, tileLayers, defaultOptions };

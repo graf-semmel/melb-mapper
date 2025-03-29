@@ -65,13 +65,19 @@ const suburbs = features.map((feature) => ({
 
 const game = Game(suburbs);
 
-const zoomToSuburb = (suburbName) => {
+function zoomToSuburb(suburbName) {
   zoomToFeature(suburbName);
   geoJson.eachLayer((layer) => {
     if (layer.feature.properties.name === suburbName) {
       highlightFeature(layer.getElement(), "flicker-target");
     }
   });
-};
+}
 
-export { game, suburbs, zoomToSuburb, resetZoom };
+function setInteractive(interactive) {
+  geoJson.eachLayer((layer) => {
+    layer.setInteractive(interactive);
+  });
+}
+
+export { game, suburbs, zoomToSuburb, resetZoom, setInteractive };

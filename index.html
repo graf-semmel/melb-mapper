@@ -13,15 +13,13 @@
   <body>
     <div id="map"></div>
     <!-- hero -->
-    <section
-      id="hero"
-      class="flex column justify-center align-center"
-      style="display: none"
-    >
+    <section id="hero" class="flex column justify-center align-center">
       <h1 class="mb-M">MELBMAPPER</h1>
       <button id="start_game" class="text-L">Start Game</button>
       <button id="search_suburbs" class="mt-M text-S">Search Suburbs</button>
       <script type="module">
+        import { setInteractive } from "./src/main.js";
+
         const startGameBtn = document.getElementById("start_game");
         const searchSuburbsBtn = document.getElementById("search_suburbs");
         const heroSection = document.getElementById("hero");
@@ -40,16 +38,18 @@
 
         startGameBtn.addEventListener("click", () => {
           transitionFromHero("game");
+          setInteractive(true);
         });
 
         searchSuburbsBtn.addEventListener("click", () => {
           transitionFromHero("search");
+          setInteractive(false);
         });
       </script>
     </section>
 
     <!-- search -->
-    <section id="search" class="flex column justify-center">
+    <section id="search" class="flex column justify-center hidden">
       <div class="flex column align-center">
         <h1 class="mb-M">Search <strong class="secondary">Suburbs</strong></h1>
         <input
