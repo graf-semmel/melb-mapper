@@ -32,7 +32,7 @@ const defaultOptions = {
   colors: ["#111111", "#222222", "#333333", "#444444"],
   bounds: L.latLngBounds(
     L.latLng(-38.8, 144.0), // Southwest corner
-    L.latLng(-37.0, 146.8) // Northeast corner
+    L.latLng(-37.0, 146.8), // Northeast corner
   ),
   onSelectLayer: (layer) => {},
 };
@@ -48,7 +48,11 @@ function getCSSVarColor(key) {
 }
 
 function createMap(features, options = {}) {
-  const mergedOptions = { ...defaultOptions, ...options };
+  const mergedOptions = {
+    ...defaultOptions,
+    enableHover: true, // Add default for hover effects
+    ...options,
+  };
 
   function defaultStyle(feature) {
     return {
@@ -73,9 +77,9 @@ function createMap(features, options = {}) {
     zoom: 10,
     maxZoom: 13,
     minZoom: 9,
-    maxBounds: mergedOptions.bounds, // Restrict the map's view to these bounds
-    maxBoundsViscosity: 1.0, // Ensure the user cannot drag outside the bounds
-    dragging: true, // Allow dragging inside the bounds
+    maxBounds: mergedOptions.bounds,
+    maxBoundsViscosity: 1.0,
+    dragging: true,
   });
 
   L.tileLayer(mergedOptions.tileLayer.url, {
@@ -85,9 +89,7 @@ function createMap(features, options = {}) {
 
   function onMouseOver(e) {
     const layer = e.target;
-
     layer.setStyle(highlighStyle(layer.feature));
-
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
     }
@@ -99,31 +101,52 @@ function createMap(features, options = {}) {
 
   function onClick(e) {
     const layer = e.target;
-    options.onSelectLayer(layer);
+    mergedOptions.onSelectLayer(layer);
   }
 
   function onEachFeature(feature, layer) {
-    layer.on({
-      mouseover: onMouseOver,
-      mouseout: onMouseOut,
-      mouseup: onMouseOut,
-      click: onClick,
-    });
+    if (mergedOptions.enableHover) {
+      layer.on({
+        mouseover: onMouseOver,
+        mouseout: onMouseOut,
+        mouseup: onMouseOut,
+      });
+    }
+    if (mergedOptions.onSelectLayer) {
+      layer.on({
+        click: onClick,
+      });
+    }
   }
 
   const geoJson = L.geoJson(features, {
     style: defaultStyle,
     onEachFeature: onEachFeature,
+    interactive: false,
   }).addTo(map);
 
-  // Remove any existing markers
   map.eachLayer((layer) => {
     if (layer instanceof L.Marker) {
       map.removeLayer(layer);
     }
   });
 
-  return { map, geoJson };
+  function zoomToFeature(featureName) {
+    if (!featureName) {
+      return;
+    }
+    geoJson.eachLayer((layer) => {
+      if (layer.feature.properties.name === featureName) {
+        map.fitBounds(layer.getBounds());
+      }
+    });
+  }
+
+  function resetZoom() {
+    map.setView(mergedOptions.bounds.getCenter(), 10);
+  }
+
+  return { map, geoJson, zoomToFeature, resetZoom };
 }
 
 export { createMap, tileLayers, defaultOptions };

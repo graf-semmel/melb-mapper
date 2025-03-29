@@ -1,150 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Vite App</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no" />
-  <title>Vite App</title>
-</head>
+  <body>
+    <div id="map"></div>
+    <!-- hero -->
+    <section
+      id="hero"
+      class="flex column justify-center align-center"
+      style="display: none"
+    >
+      <h1 class="mb-M">MELBMAPPER</h1>
+      <button id="start_game" class="text-L">Start Game</button>
+      <button id="search_suburbs" class="mt-M text-S">Search Suburbs</button>
+      <script type="module">
+        const startGameBtn = document.getElementById("start_game");
+        const searchSuburbsBtn = document.getElementById("search_suburbs");
+        const heroSection = document.getElementById("hero");
 
-<body>
-  <div id="map"></div>
-  <!-- hero -->
-  <section id="hero" class="flex column justify-center align-center" style="display: none;">
-    <h1 class="mb-M">MELBMAPPER</h1>
-    <button id="start_game" class="text-L">Start Game</button>
-    <button id="search_suburbs" class="mt-M text-S">Search Suburbs</button>
-    <script type="module">
-      const startGameBtn = document.getElementById("start_game");
-      const searchSuburbsBtn = document.getElementById("search_suburbs");
-      const heroSection = document.getElementById("hero");
+        function transitionFromHero(nextSectionId) {
+          heroSection.addEventListener(
+            "animationend",
+            () => {
+              heroSection.style.display = "none";
+              document.getElementById(nextSectionId).classList.remove("hidden");
+            },
+            { once: true }
+          );
+          heroSection.classList.add("hidden");
+        }
 
-      function transitionFromHero(nextSectionId) {
-        heroSection.addEventListener("animationend", () => {
-          heroSection.style.display = "none";
-          document.getElementById(nextSectionId).classList.remove("hidden");
-        }, { once: true });
-        heroSection.classList.add("hidden");
-      }
+        startGameBtn.addEventListener("click", () => {
+          transitionFromHero("game");
+        });
 
-      startGameBtn.addEventListener("click", () => {
-        transitionFromHero("game");
-      });
+        searchSuburbsBtn.addEventListener("click", () => {
+          transitionFromHero("search");
+        });
+      </script>
+    </section>
 
-      searchSuburbsBtn.addEventListener("click", () => {
-        transitionFromHero("search"); 
-      });
-    </script>
-  </section>
+    <!-- search -->
+    <section id="search" class="flex column justify-center">
+      <div class="flex column align-center">
+        <h1 class="mb-M">Search <strong class="secondary">Suburbs</strong></h1>
+        <input
+          type="text"
+          id="input_suburbs"
+          placeholder="Enter a suburb"
+          list="list_suburbs"
+        />
+        <datalist id="list_suburbs"></datalist>
+        <button id="back_to_menu" class="mt-M">Back to Menu</button>
+      </div>
+      <script type="module">
+        import { suburbs, zoomToSuburb, resetZoom } from "./src/main.js";
 
-  <!-- search -->
-  <section id="search" class="flex column justify-center">
-    <div class="flex column align-center">
-      <h1 class="mb-M">Search <strong class="secondary">Suburbs</strong></h1>
-      <input type="text" id="input_suburbs" placeholder="Enter a suburb" list="list_suburbs" />
-      <datalist id="list_suburbs"></datalist>
-      <button id="back_to_menu" class="mt-M">Back to Menu</button>
-    </div>
-    <script type="module">
-      const backToMenuBtn = document.getElementById("back_to_menu");
-      
-      backToMenuBtn.addEventListener("click", () => {
-        const searchSection = document.getElementById("search");
-        searchSection.addEventListener("animationend", () => {
-          searchSection.style.display = "none";
-          document.getElementById("hero").classList.remove("hidden");
-        }, { once: true });
-        searchSection.classList.add("hidden");
-      });
-    </script>
-  </section>
+        const backToMenuBtn = document.getElementById("back_to_menu");
+        const suburbsDataList = document.getElementById("list_suburbs");
+        const suburbInput = document.getElementById("input_suburbs");
 
-  <!-- game -->
-  <section id="game" class="flex column justify-center hidden">
-    <div class="flex column align-center">
-      <input type="text" id="input_suburbs" placeholder="Enter a suburb" list="list_suburbs" class="hidden" />
-      <datalist id="list_suburbs"></datalist>
-      <h1 id="text_round">Round 1 of 5</h1>
-      <h2 id="text_suburb">Find <strong>Brunswick</strong></h2>
-    </div>
-    <dialog id="summary">
-      <main class="flex column align-center">
-        <hgroup>
-          <h1>Game Finished</h1>
-          <h2 id="final_score">Your total score is <strong>0</strong></h2>
-        </hgroup>
-        <table id="table_summary">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Suburb</th>
-              <th>Guess</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <button id="play_again" class="mb-M">Play Again</button>
-      </main>
-    </dialog>
+        backToMenuBtn.addEventListener("click", () => {
+          const searchSection = document.getElementById("search");
+          searchSection.addEventListener(
+            "animationend",
+            () => {
+              searchSection.style.display = "none";
+              document.getElementById("hero").classList.remove("hidden");
+            },
+            { once: true }
+          );
+          searchSection.classList.add("hidden");
+        });
 
-    <script type="module">
-      import { game } from './src/main.js';
+        for (const suburb of suburbs) {
+          const option = document.createElement("option");
+          option.value = suburb.name;
+          suburbsDataList.appendChild(option);
+        }
 
-      const roundEl = document.getElementById("text_round");
-      const suburbEl = document.getElementById("text_suburb");
-      const scoreEl = document.getElementById("final_score");
-      const summaryDialog = document.getElementById("summary");
-      const table = document.querySelector("#table_summary tbody");
-      const playAgainBtn = document.getElementById("play_again");
+        suburbInput.addEventListener("change", (e) => {
+          const suburbName = e.target.value;
+          zoomToSuburb(suburbName);
+        });
 
-      playAgainBtn.addEventListener("click", () => {
-        game.start();
-        summaryDialog.close();
-      });
+        // if empty input, reset map view
+        suburbInput.addEventListener("input", (e) => {
+          if (e.target.value === "") {
+            resetZoom();
+          }
+        });
+      </script>
+    </section>
 
-      function updateUI(state) {
-        const { currentRound, rounds, gameFinished } = state;
-        const score = rounds.reduce((acc, round) => acc + round.getScore(), 0);
+    <!-- game -->
+    <section id="game" class="flex column justify-center hidden">
+      <div class="flex column align-center">
+        <input
+          type="text"
+          id="input_suburbs"
+          placeholder="Enter a suburb"
+          list="list_suburbs"
+          class="hidden"
+        />
+        <datalist id="list_suburbs"></datalist>
+        <h1 id="text_round">Round 1 of 5</h1>
+        <h2 id="text_suburb">Find <strong>Brunswick</strong></h2>
+      </div>
+      <dialog id="summary">
+        <main class="flex column align-center">
+          <hgroup>
+            <h1>Game Finished</h1>
+            <h2 id="final_score">Your total score is <strong>0</strong></h2>
+          </hgroup>
+          <table id="table_summary">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Suburb</th>
+                <th>Guess</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <button id="play_again" class="mb-M">Play Again</button>
+        </main>
+      </dialog>
 
-        function renderSummary() {
-          table.innerHTML = "";
-          for (const round of rounds) {
-            const row = document.createElement("tr");
-            row.innerHTML = `
+      <script type="module">
+        import { game } from "./src/main.js";
+
+        const roundEl = document.getElementById("text_round");
+        const suburbEl = document.getElementById("text_suburb");
+        const scoreEl = document.getElementById("final_score");
+        const summaryDialog = document.getElementById("summary");
+        const table = document.querySelector("#table_summary tbody");
+        const playAgainBtn = document.getElementById("play_again");
+
+        playAgainBtn.addEventListener("click", () => {
+          game.start();
+          summaryDialog.close();
+        });
+
+        function updateUI(state) {
+          const { currentRound, rounds, gameFinished } = state;
+          const score = rounds.reduce(
+            (acc, round) => acc + round.getScore(),
+            0
+          );
+
+          function renderSummary() {
+            table.innerHTML = "";
+            for (const round of rounds) {
+              const row = document.createElement("tr");
+              row.innerHTML = `
               <td>${round.index}</td>
               <td>${round.suburb}</td>
               <td>${round.getGuessedSuburb()}</td>
-              <td>${round.isGuessedCorrectly() ? "<span class=\"secondary\">✔︎<span>" : "❌"}</td>
+              <td>${
+                round.isGuessedCorrectly()
+                  ? '<span class="secondary">✔︎<span>'
+                  : "❌"
+              }</td>
             `;
-            table.appendChild(row);
+              table.appendChild(row);
+            }
+
+            scoreEl.innerHTML = `Your final score is <strong>${score}</strong>`;
           }
 
-          scoreEl.innerHTML = `Your final score is <strong>${score}</strong>`;
+          if (gameFinished) {
+            console.debug("game finished!");
+            setTimeout(() => {
+              summaryDialog.showModal();
+              renderSummary();
+            }, 600);
+            return;
+          }
+
+          roundEl.innerHTML = `Round <strong class="secondary">${currentRound.index}</strong> of ${rounds.length}`;
+          suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
         }
 
-        if (gameFinished) {
-          console.debug("game finished!");
-          setTimeout(() => {
-            summaryDialog.showModal();
-            renderSummary();
-          }, 600);
-          return;
-        }
+        game.subscribe((state) => {
+          updateUI(state);
+        });
 
-        roundEl.innerHTML = `Round <strong class="secondary">${currentRound.index}</strong> of ${rounds.length}`;
-        suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
-      };
-
-      game.subscribe((state) => {
-        updateUI(state);
-      });
-
-      game.start();
-
-    </script>
-  </section>
-</body>
-
+        game.start();
+      </script>
+    </section>
+  </body>
 </html>
