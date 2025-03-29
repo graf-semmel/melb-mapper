@@ -11,30 +11,62 @@
 <body>
   <div id="map"></div>
   <!-- hero -->
-  <section id="hero" class="flex column justify-center align-center">
+  <section id="hero" class="flex column justify-center align-center" style="display: none;">
     <h1 class="mb-M">MELBMAPPER</h1>
     <button id="start_game" class="text-L">Start Game</button>
     <button id="search_suburbs" class="mt-M text-S">Search Suburbs</button>
     <script type="module">
       const startGameBtn = document.getElementById("start_game");
+      const searchSuburbsBtn = document.getElementById("search_suburbs");
+      const heroSection = document.getElementById("hero");
 
-      startGameBtn.addEventListener("click", () => {
-        const heroSection = document.getElementById("hero");
+      function transitionFromHero(nextSectionId) {
         heroSection.addEventListener("animationend", () => {
           heroSection.style.display = "none";
-          document.getElementById("game").classList.remove("hidden");
+          document.getElementById(nextSectionId).classList.remove("hidden");
         }, { once: true });
         heroSection.classList.add("hidden");
+      }
+
+      startGameBtn.addEventListener("click", () => {
+        transitionFromHero("game");
+      });
+
+      searchSuburbsBtn.addEventListener("click", () => {
+        transitionFromHero("search"); 
       });
     </script>
   </section>
+
+  <!-- search -->
+  <section id="search" class="flex column justify-center">
+    <div class="flex column align-center">
+      <h1 class="mb-M">Search <strong class="secondary">Suburbs</strong></h1>
+      <input type="text" id="input_suburbs" placeholder="Enter a suburb" list="list_suburbs" />
+      <datalist id="list_suburbs"></datalist>
+      <button id="back_to_menu" class="mt-M">Back to Menu</button>
+    </div>
+    <script type="module">
+      const backToMenuBtn = document.getElementById("back_to_menu");
+      
+      backToMenuBtn.addEventListener("click", () => {
+        const searchSection = document.getElementById("search");
+        searchSection.addEventListener("animationend", () => {
+          searchSection.style.display = "none";
+          document.getElementById("hero").classList.remove("hidden");
+        }, { once: true });
+        searchSection.classList.add("hidden");
+      });
+    </script>
+  </section>
+
   <!-- game -->
   <section id="game" class="flex column justify-center hidden">
     <div class="flex column align-center">
       <input type="text" id="input_suburbs" placeholder="Enter a suburb" list="list_suburbs" class="hidden" />
       <datalist id="list_suburbs"></datalist>
       <h1 id="text_round">Round 1 of 5</h1>
-      <h2 id="text_suburb">Find <b>Brunswick</b></h2>
+      <h2 id="text_suburb">Find <strong>Brunswick</strong></h2>
     </div>
     <dialog id="summary">
       <main class="flex column align-center">
@@ -101,7 +133,7 @@
           return;
         }
 
-        roundEl.innerHTML = `Round <strong><span class="secondary">${currentRound.index}</span></strong> of ${rounds.length}`;
+        roundEl.innerHTML = `Round <strong class="secondary">${currentRound.index}</strong> of ${rounds.length}`;
         suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
       };
 

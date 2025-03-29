@@ -60,6 +60,8 @@ function showSuburbs() {
       }, duration);
     }
   }
+
+  return { map, geoJson };
 }
 
 const suburbs = features.map((feature) => ({
@@ -67,8 +69,9 @@ const suburbs = features.map((feature) => ({
 }));
 
 const game = Game(suburbs);
+const { map, geoJson } = showSuburbs();
 
-// setupSearch(features, geojson, map, bounds, game);
-showSuburbs();
+// Initialize search functionality
+setupSearch(features, geoJson, map, map.getBounds());
 
 export { game };

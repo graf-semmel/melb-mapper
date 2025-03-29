@@ -82,7 +82,7 @@ body {
   background-color: var(--background);
 }
 
-#game {
+#game, #search{
   position: absolute;
   width: 100%;
   /* leaflets zoom and attribution layer is at z-index 1000 */
