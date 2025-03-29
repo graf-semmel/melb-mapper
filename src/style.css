@@ -12,6 +12,11 @@
 
   line-height: 1.5;
 
+  /* Text Sizes */
+  --text-S: 0.8rem;
+  --text-M: 1rem;
+  --text-L: 1.5rem;
+
   /* Base Colors */
   --color-primary: #69247c;
   --color-primary-text: #ffffff;
@@ -354,4 +359,17 @@ mark {
     opacity: 0;
     text-shadow: none;
   }
+}
+
+/* Add text size classes at the end of the file */
+.text-S {
+  font-size: var(--text-S);
+}
+
+.text-M {
+  font-size: var(--text-M);
+}
+
+.text-L {
+  font-size: var(--text-L);
 }

@@ -13,20 +13,18 @@
   <!-- hero -->
   <section id="hero" class="flex column justify-center align-center">
     <h1 class="mb-M">MELBMAPPER</h1>
-    <button id="start_game">Start Game</button>
+    <button id="start_game" class="text-L">Start Game</button>
+    <button id="search_suburbs" class="mt-M text-S">Search Suburbs</button>
     <script type="module">
-      import { game } from './src/main.js';
-
       const startGameBtn = document.getElementById("start_game");
 
       startGameBtn.addEventListener("click", () => {
         const heroSection = document.getElementById("hero");
-        heroSection.classList.add("hidden");
-
         heroSection.addEventListener("animationend", () => {
           heroSection.style.display = "none";
           document.getElementById("game").classList.remove("hidden");
         }, { once: true });
+        heroSection.classList.add("hidden");
       });
     </script>
   </section>
