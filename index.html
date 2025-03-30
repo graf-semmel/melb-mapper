@@ -102,14 +102,16 @@
     <section id="game" class="flex column justify-center hidden">
       <div class="flex column align-center">
         <button data-action="back-to-menu" class="text-S">Back to Menu</button>
-        <h1 id="text_round">Round 1 of 5</h1>
-        <h2 id="text_suburb">Find <strong>Brunswick</strong></h2>
+        <hgroup>
+          <h1 id="text_suburb">Find <strong>Brunswick</strong></h1>
+          <p id="text_round">Round 1 of 5</p>
+        </hgroup>
       </div>
       <dialog id="summary">
         <main class="flex column align-center">
           <hgroup>
             <h1>Game Finished</h1>
-            <h2 id="final_score">Your total score is <strong>0</strong></h2>
+            <p id="final_score">Your total score is <strong>0</strong></p>
           </hgroup>
           <table id="table_summary">
             <thead>
@@ -179,7 +181,6 @@
           }
 
           if (gameFinished) {
-            console.debug("game finished!");
             setTimeout(() => {
               summaryDialog.showModal();
               renderSummary();
