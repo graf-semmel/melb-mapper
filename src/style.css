@@ -324,13 +324,18 @@ mark {
     --color-glow: var(--color-secondary);
     --color-shadow: rgba(0, 0, 0, 0.5);
   }
-
+  
   &.hidden {
+    display: none;
+  }
+
+  &.animate-out {
+    --transition-duration: 0.5s;
     & h1 {
-      animation: hover-glow-reverse 1s ease-in-out forwards;
+      animation: hover-glow-reverse var(--transition-duration) ease-in-out forwards;
     }
     & button {
-      transition: opacity 1s ease-in-out;
+      transition: opacity var(--transition-duration) ease-in-out;
       opacity: 0;
     }
   }

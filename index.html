@@ -16,7 +16,7 @@
     <section id="hero" class="flex column justify-center align-center">
       <h1 class="mb-M">MELBMAPPER</h1>
       <button id="start_game" class="text-L">Start Game</button>
-      <button id="search_suburbs" class="mt-M text-S">Search Suburbs</button>
+      <button id="search_suburbs" class="text-S">Search Suburbs</button>
       <script type="module">
         import { setInteractive } from "./src/main.js";
 
@@ -28,12 +28,13 @@
           heroSection.addEventListener(
             "animationend",
             () => {
-              heroSection.style.display = "none";
+              heroSection.classList.add("hidden");
+              heroSection.classList.remove("animate-out");
               document.getElementById(nextSectionId).classList.remove("hidden");
             },
             { once: true }
           );
-          heroSection.classList.add("hidden");
+          heroSection.classList.add("animate-out");
         }
 
         startGameBtn.addEventListener("click", () => {
@@ -51,7 +52,8 @@
     <!-- search -->
     <section id="search" class="flex column justify-center hidden">
       <div class="flex column align-center">
-        <h1 class="mb-M">Search <strong class="secondary">Suburbs</strong></h1>
+        <button data-action="back-to-menu" class="text-S">Back to Menu</button>
+        <h1>Search <strong class="secondary">Suburbs</strong></h1>
         <input
           type="text"
           id="input_suburbs"
@@ -59,26 +61,21 @@
           list="list_suburbs"
         />
         <datalist id="list_suburbs"></datalist>
-        <button id="back_to_menu" class="mt-M">Back to Menu</button>
       </div>
       <script type="module">
         import { suburbs, zoomToSuburb, resetZoom } from "./src/main.js";
 
-        const backToMenuBtn = document.getElementById("back_to_menu");
+        const backToMenuBtn = document.querySelector(
+          '#search button[data-action="back-to-menu"]'
+        );
         const suburbsDataList = document.getElementById("list_suburbs");
         const suburbInput = document.getElementById("input_suburbs");
 
         backToMenuBtn.addEventListener("click", () => {
-          const searchSection = document.getElementById("search");
-          searchSection.addEventListener(
-            "animationend",
-            () => {
-              searchSection.style.display = "none";
-              document.getElementById("hero").classList.remove("hidden");
-            },
-            { once: true }
-          );
-          searchSection.classList.add("hidden");
+          suburbInput.value = "";
+          resetZoom();
+          document.getElementById("search").classList.add("hidden");
+          document.getElementById("hero").classList.remove("hidden");
         });
 
         for (const suburb of suburbs) {
@@ -104,14 +101,7 @@
     <!-- game -->
     <section id="game" class="flex column justify-center hidden">
       <div class="flex column align-center">
-        <input
-          type="text"
-          id="input_suburbs"
-          placeholder="Enter a suburb"
-          list="list_suburbs"
-          class="hidden"
-        />
-        <datalist id="list_suburbs"></datalist>
+        <button data-action="back-to-menu" class="text-S">Back to Menu</button>
         <h1 id="text_round">Round 1 of 5</h1>
         <h2 id="text_suburb">Find <strong>Brunswick</strong></h2>
       </div>
@@ -145,10 +135,20 @@
         const summaryDialog = document.getElementById("summary");
         const table = document.querySelector("#table_summary tbody");
         const playAgainBtn = document.getElementById("play_again");
+        const backToMenuBtn2 = document.querySelector(
+          '#game button[data-action="back-to-menu"]'
+        );
 
         playAgainBtn.addEventListener("click", () => {
           game.start();
           summaryDialog.close();
+        });
+
+        backToMenuBtn2.addEventListener("click", () => {
+          game.start();
+          summaryDialog.close();
+          document.getElementById("game").classList.add("hidden");
+          document.getElementById("hero").classList.remove("hidden");
         });
 
         function updateUI(state) {
