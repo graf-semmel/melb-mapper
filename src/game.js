@@ -45,14 +45,13 @@ export function Game(suburbs) {
       return;
     }
 
-    console.debug("guessed suburb:", guess);
     currentRound.guess(guess);
     const correctGuess = currentRound.isGuessedCorrectly();
-    if (correctGuess) {
-      console.debug("correct!");
-    } else {
-      console.debug("wrong!");
-    }
+    console.debug(
+      "guessed suburb:",
+      guess,
+      correctGuess ? "[correct]" : "[wrong]",
+    );
     nextRound();
     return correctGuess;
   }
@@ -68,20 +67,19 @@ export function Game(suburbs) {
   }
 
   function updateState(state) {
-    console.debug("state update:");
-    console.debug({
+    console.debug("state update:", {
       round: state.currentRound?.index,
       suburb: state.currentRound?.suburb,
     });
 
     window.eventBus.dispatchEvent(
-      new CustomEvent("game:state", { detail: state })
+      new CustomEvent("game:state", { detail: state }),
     );
   }
 
   function start() {
     rounds = Array.from({ length: 5 }, (_, i) =>
-      Round(i + 1, suburbs[Math.floor(Math.random() * suburbs.length)].name)
+      Round(i + 1, suburbs[Math.floor(Math.random() * suburbs.length)].name),
     );
     currentRound = rounds[0];
 
