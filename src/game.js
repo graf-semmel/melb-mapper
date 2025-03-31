@@ -117,6 +117,11 @@ export function Game(suburbs) {
   }
 
   function start() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+    }
+
+    currentRound = undefined;
     rounds = Array.from({ length: 5 }, (_, i) =>
       createRound(
         i + 1,
