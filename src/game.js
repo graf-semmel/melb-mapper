@@ -3,6 +3,7 @@ window.eventBus = new EventTarget();
 function Round(index, suburb) {
   let guessedSuburb = undefined;
   let score = 0;
+  let timeLeft = 10; // 10 seconds per round
 
   return {
     index,
@@ -17,12 +18,42 @@ function Round(index, suburb) {
     isGuessedCorrectly: () => score > 0,
     getScore: () => score,
     getGuessedSuburb: () => guessedSuburb,
+    updateTime: () => {
+      timeLeft = Math.max(0, timeLeft - 1);
+      return timeLeft;
+    },
+    getTimeLeft: () => timeLeft,
   };
 }
 
 export function Game(suburbs) {
   let currentRound = undefined;
   let rounds = [];
+  let timerInterval = null;
+
+  function startTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+    }
+
+    timerInterval = setInterval(() => {
+      if (!currentRound) return;
+
+      const timeLeft = currentRound.updateTime();
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        nextRound();
+      }
+
+      console.debug("currentRound", currentRound);
+
+      updateState({
+        currentRound,
+        rounds,
+        gameFinished: isGameFinished(),
+      });
+    }, 1000);
+  }
 
   function nextRound() {
     const nextIndex = currentRound.index + 1;
@@ -30,6 +61,7 @@ export function Game(suburbs) {
       currentRound = undefined;
     } else {
       currentRound = rounds[nextIndex - 1];
+      startTimer();
     }
 
     updateState({
@@ -70,6 +102,7 @@ export function Game(suburbs) {
     console.debug("state update:", {
       round: state.currentRound?.index,
       suburb: state.currentRound?.suburb,
+      timeLeft: state.currentRound?.getTimeLeft(),
     });
 
     window.eventBus.dispatchEvent(
@@ -78,10 +111,15 @@ export function Game(suburbs) {
   }
 
   function start() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+    }
+
     rounds = Array.from({ length: 5 }, (_, i) =>
       Round(i + 1, suburbs[Math.floor(Math.random() * suburbs.length)].name),
     );
     currentRound = rounds[0];
+    startTimer();
 
     updateState({
       currentRound,
