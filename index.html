@@ -106,7 +106,6 @@
         <hgroup>
           <h1 id="text_suburb">Find <strong>Brunswick</strong></h1>
           <p id="text_round">Round 1 of 5</p>
-          <p id="text_timer" class="text-S">Time left: <strong>10</strong>s</p>
         </hgroup>
       </div>
       <dialog id="summary">
@@ -142,7 +141,6 @@
         const backToMenuBtn2 = document.querySelector(
           '#game button[data-action="back-to-menu"]'
         );
-        const timerEl = document.getElementById("text_timer");
 
         playAgainBtn.addEventListener("click", () => {
           game.start();
@@ -191,12 +189,12 @@
             return;
           }
 
-          roundEl.innerHTML = `Round <strong class="secondary">${currentRound.index}</strong> of ${rounds.length}`;
           suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
-          timerEl.innerHTML = `Time left: <strong>${currentRound.getTimeLeft()}</strong>s`;
-          if (currentRound.getTimeLeft() <= 3) {
-            timerEl.classList.add("danger");
-          }
+          const roundString = `Round <strong class="secondary">${currentRound.index}</strong> of ${rounds.length}`;
+          const timeLeftClass =
+            currentRound.getTimeLeft() <= 3 ? "danger" : "secondary";
+          const timeLeftString = `Time left <strong class="${timeLeftClass}">${currentRound.getTimeLeft()}</strong>s`;
+          roundEl.innerHTML = `${roundString} | ${timeLeftString}`;
         }
 
         game.subscribe((state) => {

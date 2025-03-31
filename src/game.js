@@ -1,27 +1,35 @@
 window.eventBus = new EventTarget();
 
-function Round(index, suburb) {
+function createRound(index, suburb) {
   let guessedSuburb = undefined;
   let score = 0;
-  let timeLeft = 10; // 10 seconds per round
+  let timeLeft = 10;
+
+  function updateTime() {
+    timeLeft = Math.max(0, timeLeft - 1);
+    return timeLeft;
+  }
+
+  function guess(guess) {
+    if (guess === suburb) {
+      score++;
+    }
+    guessedSuburb = guess;
+    return score > 0;
+  }
+
+  function isGuessedCorrectly() {
+    return score > 0;
+  }
 
   return {
     index,
     suburb,
-    guess: (guess) => {
-      if (guess === suburb) {
-        score++;
-      }
-      guessedSuburb = guess;
-      return score > 0;
-    },
-    isGuessedCorrectly: () => score > 0,
+    guess,
+    isGuessedCorrectly,
     getScore: () => score,
     getGuessedSuburb: () => guessedSuburb,
-    updateTime: () => {
-      timeLeft = Math.max(0, timeLeft - 1);
-      return timeLeft;
-    },
+    updateTime,
     getTimeLeft: () => timeLeft,
   };
 }
@@ -30,6 +38,27 @@ export function Game(suburbs) {
   let currentRound = undefined;
   let rounds = [];
   let timerInterval = null;
+
+  function createState() {
+    return {
+      currentRound,
+      rounds,
+      gameFinished: isGameFinished(),
+    };
+  }
+
+  function updateState() {
+    const state = createState();
+    console.debug("state update:", {
+      round: state.currentRound?.index,
+      suburb: state.currentRound?.suburb,
+      timeLeft: state.currentRound?.getTimeLeft(),
+    });
+
+    window.eventBus.dispatchEvent(
+      new CustomEvent("game:state", { detail: state }),
+    );
+  }
 
   function startTimer() {
     if (timerInterval) {
@@ -43,32 +72,22 @@ export function Game(suburbs) {
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
         nextRound();
+      } else {
+        updateState();
       }
-
-      console.debug("currentRound", currentRound);
-
-      updateState({
-        currentRound,
-        rounds,
-        gameFinished: isGameFinished(),
-      });
     }, 1000);
   }
 
   function nextRound() {
-    const nextIndex = currentRound.index + 1;
-    if (nextIndex > rounds.length) {
+    const nextIndex = currentRound !== undefined ? currentRound.index : 0;
+    if (nextIndex >= rounds.length) {
       currentRound = undefined;
     } else {
-      currentRound = rounds[nextIndex - 1];
+      currentRound = rounds[nextIndex];
       startTimer();
     }
 
-    updateState({
-      currentRound,
-      rounds,
-      gameFinished: isGameFinished(),
-    });
+    updateState();
   }
 
   function guessSuburb(guess) {
@@ -77,8 +96,7 @@ export function Game(suburbs) {
       return;
     }
 
-    currentRound.guess(guess);
-    const correctGuess = currentRound.isGuessedCorrectly();
+    const correctGuess = currentRound.guess(guess);
     console.debug(
       "guessed suburb:",
       guess,
@@ -98,45 +116,22 @@ export function Game(suburbs) {
     });
   }
 
-  function updateState(state) {
-    console.debug("state update:", {
-      round: state.currentRound?.index,
-      suburb: state.currentRound?.suburb,
-      timeLeft: state.currentRound?.getTimeLeft(),
-    });
-
-    window.eventBus.dispatchEvent(
-      new CustomEvent("game:state", { detail: state }),
-    );
-  }
-
   function start() {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-    }
-
     rounds = Array.from({ length: 5 }, (_, i) =>
-      Round(i + 1, suburbs[Math.floor(Math.random() * suburbs.length)].name),
+      createRound(
+        i + 1,
+        suburbs[Math.floor(Math.random() * suburbs.length)].name,
+      ),
     );
-    currentRound = rounds[0];
-    startTimer();
 
-    updateState({
-      currentRound,
-      rounds,
-      gameFinished: isGameFinished(),
-    });
-  }
-
-  function getCurrentRound() {
-    return currentRound;
+    nextRound();
   }
 
   return {
     guessSuburb,
     subscribe,
     start,
-    getCurrentRound,
+    getCurrentRound: () => currentRound,
     isGameFinished,
   };
 }

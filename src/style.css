@@ -390,15 +390,6 @@ mark {
   font-size: var(--text-L);
 }
 
-#text_timer {
-  margin-top: var(--space-S);
-  transition: color 0.3s ease;
-
-  & strong {
-    color: var(--color-info);
-  }
-
-  &.danger strong {
-    color: var(--color-danger);
-  }
+.danger {
+  color: var(--color-danger);
 }
