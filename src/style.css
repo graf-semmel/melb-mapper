@@ -289,7 +289,6 @@ dialog:open {
 mark {
   background-color: var(--color-secondary);
   color: var(--color-secondary-text);
-  animation: blink 0.2s linear;
 }
 
 @keyframes blink {
@@ -392,4 +391,5 @@ mark {
 
 .danger {
   color: var(--color-danger);
+  animation: blink 0.2s linear;
 }

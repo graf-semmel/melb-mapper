@@ -3,7 +3,7 @@ window.eventBus = new EventTarget();
 function createRound(index, suburb) {
   let guessedSuburb = undefined;
   let score = 0;
-  let timeLeft = 10;
+  let timeLeft = 15;
 
   function updateTime() {
     timeLeft = Math.max(0, timeLeft - 1);
