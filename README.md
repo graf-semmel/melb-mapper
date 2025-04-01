@@ -2,7 +2,7 @@
 
 A fun and interactive game to learn Melbourne's suburbs! Test your knowledge by finding suburbs on the map.
 
-🎮 [PLAY NOW ](https://graf-semmel.github.io/melb-mapper/) 🎮
+🎮 [PLAY NOW ](https://melb-mapper.pages.dev/) 🎮
 
 ## Features
 
