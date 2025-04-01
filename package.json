@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
-    "build": "vite build --base \"/melb-mapper\"",
+    "build": "vite build",
     "preview": "vite --open preview",
-    "format": "npx @biomejs/biome format --write <files>",
-    "lint": "npx @biomejs/biome lint --write <files>",
-    "check": "npx @biomejs/biome check --write <files>"
+    "format": "npx @biomejs/biome format --write .",
+    "lint": "npx @biomejs/biome lint --write .",
+    "check": "npx @biomejs/biome check ."
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
