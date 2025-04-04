@@ -1,6 +1,6 @@
 import "./style.css";
 import "leaflet/dist/leaflet.css";
-import suburbsRaw from "./suburbs-name.json" assert { type: "json" };
+import suburbsRaw from "./melb.json" assert { type: "json" };
 import { Game } from "./game";
 import { createMap } from "./map";
 
