@@ -347,6 +347,19 @@ mark {
       opacity: 0;
     }
   }
+
+  a img {
+    transition: all 0.2s;
+    --color-shadow: rgba(0, 0, 0, 0.3);
+    --translate: 0.5rem;
+
+    &:hover {
+      filter: drop-shadow(
+          var(--translate) var(--translate) 3px var(--color-shadow)
+        )
+        drop-shadow(var(--translate) var(--translate) 5px var(--color-shadow));
+    }
+  }
 }
 
 @keyframes hover-glow {
@@ -392,4 +405,12 @@ mark {
 .danger {
   color: var(--color-danger);
   animation: blink 0.2s linear;
+}
+
+.gap-S {
+  gap: var(--space-S);
+}
+
+.gap-M {
+  gap: var(--space-M);
 }
