@@ -40,3 +40,7 @@ The project uses a modular architecture with:
 - `src/map.js` - Map configuration and interactions
 - `src/main.js` - Application entry point and initialization
 - `index.html` - UI and UI logic
+
+## License
+
+This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0). See the [LICENSE](LICENSE) file for details.
