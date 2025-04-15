@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://melb-mapper.pages.dev/sitemap.xml
