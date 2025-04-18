@@ -1,7 +1,7 @@
 // Utility for loading city features and suburbs from GeoJSON/JSON
 export async function loadCityData(cityKey) {
   const cityFiles = {
-    melbourne: "./melb.json",
+    melbourne: "./melbourne-suburbs.json",
     sydney: "./sydney.json",
   };
   const file = cityFiles[cityKey] || cityFiles.melbourne;
