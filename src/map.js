@@ -1,3 +1,7 @@
+// Map rendering and interaction logic for OzMapper.
+// Provides functions to create and configure the Leaflet map, tile layers, and suburb feature layers.
+// Handles map initialization, feature highlighting, zooming, and interactivity for game and search modes.
+
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
