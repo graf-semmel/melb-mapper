@@ -1,17 +1,57 @@
 #!/bin/bash
 
-# Parse options
-bounds_only=false
-suburbs_only=false
-verbose=false
-city_name=""
-city_admin_level=7
+# Helper functions for common operations
+check_dependencies() {
+    for cmd in jq curl; do
+        if ! command -v "$cmd" &>/dev/null; then
+            echo "Error: Required dependency '$cmd' is not installed"
+            exit 1
+        fi
+    done
+}
+
+check_file_output() {
+    local file="$1"
+    local description="$2"
+    if [ -f "$file" ]; then
+        debug "Output file size: $(wc -c <"$file") bytes"
+        echo "$description saved to $file"
+    else
+        echo "Error: Failed to create output file $file"
+        exit 1
+    fi
+}
+
+make_overpass_request() {
+    local query="$1"
+    local output_file="$2"
+    debug "Sending request to Overpass API..."
+
+    local response
+    response=$(curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+        --data-urlencode "data=$query" \
+        "http://overpass-api.de/api/interpreter")
+
+    if [ $? -ne 0 ] || [ -z "$response" ]; then
+        echo "Error: Failed to fetch data from Overpass API"
+        exit 1
+    fi
+
+    echo "$response" >"$output_file"
+}
 
 debug() {
     if [ "$verbose" = true ]; then
         echo "[DEBUG] $1"
     fi
 }
+
+# Parse options
+bounds_only=false
+suburbs_only=false
+verbose=false
+city_name=""
+city_admin_level=7
 
 usage() {
     echo "Usage: $0 [-v] [-a city_admin_level] (-b|-s) city_name"
@@ -64,86 +104,86 @@ if [ $# -ne 1 ]; then
     usage
 fi
 
+# Main script execution
+check_dependencies
+
 city_name="$1"
-lowercase_city_name=$(echo "$city_name" | awk '{print tolower($0)}')
-capitalised_city_name=$(echo "$lowercase_city_name" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+file_name=$(echo "$city_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 
 debug "City name processing complete:"
 debug "  Original: $city_name"
-debug "  Lowercase: $lowercase_city_name"
-debug "  Capitalised: $capitalised_city_name"
+debug "  File name: $file_name"
 
-if [ "$bounds_only" = true ]; then
-    # Extract bounds
-    debug "Preparing bounds query for $capitalised_city_name"
-    
-    query='[out:json][timeout:25];
-relation["name"="'$capitalised_city_name'"]["boundary"="administrative"]["admin_level"="'$city_admin_level'"];
-out bb qt;'
-    
-    debug "Query: $query"
-    debug "Sending request to Overpass API..."
+get_bounds_query() {
+    local city="$1"
+    local admin_level="$2"
+    cat <<EOF
+[out:json][timeout:25];
+relation["name"="$city"]["boundary"="administrative"]["admin_level"="$admin_level"];
+out bb qt;
+EOF
+}
 
-    curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
-        --data-urlencode "data=$query" \
-        "http://overpass-api.de/api/interpreter" |
-        jq -c -r '.elements[0].bounds' >"$lowercase_city_name-bounds.json"
-
-    debug "Processing complete, checking output file"
-
-    if [ -f "$lowercase_city_name-bounds.json" ]; then
-        debug "Output file size: $(wc -c <"$lowercase_city_name-bounds.json") bytes"
-    fi
-
-    echo "Bounds of $capitalised_city_name saved to $lowercase_city_name-bounds.json"
-
-elif [ "$suburbs_only" = true ]; then
-    # Extract suburbs
-    debug "Preparing suburbs query for $capitalised_city_name"
-
-    query='[out:json][timeout:25];
-area["name"="'$capitalised_city_name'"]["boundary"="administrative"]["admin_level"="'$city_admin_level'"]->.searchArea;
+get_suburbs_query() {
+    local city="$1"
+    local admin_level="$2"
+    cat <<EOF
+[out:json][timeout:25];
+area["name"="$city"]["boundary"="administrative"]["admin_level"="$admin_level"]->.searchArea;
 (
     relation["boundary"="administrative"]["admin_level"="9"](area.searchArea);
 );
-out geom;'
-    
+out geom;
+EOF
+}
+
+fetch_and_save_bounds() {
+    local city="$1"
+    local admin_level="$2"
+    local filename="$3"
+    debug "Preparing bounds query for $city"
+    local query
+    query=$(get_bounds_query "$city" "$admin_level")
     debug "Query: $query"
-    debug "Sending request to Overpass API..."
 
-    curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
-        --data-urlencode "data=$query" \
-        "http://overpass-api.de/api/interpreter" -o "$lowercase_city_name-suburbs.osm.json"
+    make_overpass_request "$query" "temp_bounds.json"
+    jq -c -r '.elements[0].bounds' "temp_bounds.json" >"${filename}.bounds.json"
+    rm "temp_bounds.json"
 
-    debug "Processing complete, checking output file"
-    
-    if [ -f "$lowercase_city_name-suburbs.osm.json" ]; then
-        debug "Output file size: $(wc -c <"$lowercase_city_name-suburbs.osm.json") bytes"
-    fi
-    
-    echo "Suburbs of $capitalised_city_name saved to $lowercase_city_name-suburbs.osm.json"
+    check_file_output "${filename}.bounds.json" "Bounds of $city"
+}
 
-    # Convert OSM to GeoJSON
+fetch_and_save_suburbs() {
+    local city="$1"
+    local admin_level="$2"
+    local filename="$3"
+    debug "Preparing suburbs query for $city"
+    local query
+    query=$(get_suburbs_query "$city" "$admin_level")
+    debug "Query: $query"
+
+    make_overpass_request "$query" "${filename}.suburbs.osm.json"
+    check_file_output "${filename}.suburbs.osm.json" "Suburbs of $city (OSM format)"
+
     debug "Converting OSM to GeoJSON..."
-    
-    ../node_modules/osmtogeojson/osmtogeojson "$lowercase_city_name-suburbs.osm.json" | jq -c '{
-      type,
-      features: [.features[] | select(.geometry.type == "Polygon") | {
-        type: "Feature",
-        properties: {name: .properties.name},
-        geometry: {
-          type: "Polygon",
-          coordinates: .geometry.coordinates
-        }
-      }]
-    }' >"$lowercase_city_name-suburbs.json"
-    
-    debug "Processing complete, checking output file"
-    
-    if [ -f "$lowercase_city_name-suburbs.json" ]; then
-        debug "Output file size: $(wc -c <"$lowercase_city_name-suburbs.json") bytes"
-    fi
-    
-    echo "Suburbs of $capitalised_city_name saved to $lowercase_city_name-suburbs.json"
+    ../node_modules/osmtogeojson/osmtogeojson "${filename}.suburbs.osm.json" |
+        jq -c '{
+        type,
+        features: [.features[] | select(.geometry.type == "Polygon") | {
+            type: "Feature",
+            properties: {name: .properties.name},
+            geometry: {
+                type: "Polygon",
+                coordinates: .geometry.coordinates
+            }
+        }]
+    }' >"${filename}.suburbs.json"
 
+    check_file_output "${filename}.suburbs.json" "Suburbs of $city (GeoJSON format)"
+}
+
+if [ "$bounds_only" = true ]; then
+    fetch_and_save_bounds "$city_name" "$city_admin_level" "$file_name"
+elif [ "$suburbs_only" = true ]; then
+    fetch_and_save_suburbs "$city_name" "$city_admin_level" "$file_name"
 fi
