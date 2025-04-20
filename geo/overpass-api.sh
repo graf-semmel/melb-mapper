@@ -5,6 +5,7 @@ bounds_only=false
 suburbs_only=false
 verbose=false
 city_name=""
+city_admin_level=7
 
 debug() {
     if [ "$verbose" = true ]; then
@@ -13,15 +14,16 @@ debug() {
 }
 
 usage() {
-    echo "Usage: $0 [-v] (-b|-s) city_name"
+    echo "Usage: $0 [-v] [-a city_admin_level] (-b|-s) city_name"
     echo "  -b: Extract only bounds for the specified city"
     echo "  -s: Extract only suburbs for the specified city"
     echo "  -v: Enable verbose debug messages"
+    echo "  -a: Specify city_admin_level (default: 7)"
     exit 1
 }
 
 # Parse command line options
-while getopts "bsv" opt; do
+while getopts "bsva:" opt; do
     case $opt in
     b)
         bounds_only=true
@@ -31,6 +33,9 @@ while getopts "bsv" opt; do
         ;;
     v)
         verbose=true
+        ;;
+    a)
+        city_admin_level="$OPTARG"
         ;;
     *)
         usage
@@ -44,6 +49,7 @@ debug "Command line options processed"
 debug "bounds_only=$bounds_only"
 debug "suburbs_only=$suburbs_only"
 debug "verbose=$verbose"
+debug "city_admin_level=$city_admin_level"
 
 # Validate options - ensure exactly one option is selected
 if { [ "$bounds_only" = false ] && [ "$suburbs_only" = false ]; } ||
@@ -72,7 +78,7 @@ if [ "$bounds_only" = true ]; then
     debug "Preparing bounds query for $capitalised_city_name"
     
     query='[out:json][timeout:25];
-relation["name"="'$capitalised_city_name'"]["boundary"="administrative"]["admin_level"="7"];
+relation["name"="'$capitalised_city_name'"]["boundary"="administrative"]["admin_level"="'$city_admin_level'"];
 out bb qt;'
     
     debug "Query: $query"
@@ -96,7 +102,7 @@ elif [ "$suburbs_only" = true ]; then
     debug "Preparing suburbs query for $capitalised_city_name"
 
     query='[out:json][timeout:25];
-area["name"="'$capitalised_city_name'"]["boundary"="administrative"]["admin_level"="7"]->.searchArea;
+area["name"="'$capitalised_city_name'"]["boundary"="administrative"]["admin_level"="'$city_admin_level'"]->.searchArea;
 (
     relation["boundary"="administrative"]["admin_level"="9"](area.searchArea);
 );
