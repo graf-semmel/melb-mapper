@@ -1,6 +1,25 @@
 #!/bin/bash
 
-# Helper functions for common operations
+# overpass-api.sh
+#
+# Downloads city boundary and suburb data from OpenStreetMap using the Overpass API.
+# Outputs results as JSON and GeoJSON files for mapping/data analysis.
+#
+# Usage:
+#   sh overpass-api.sh [OPTIONS] CITY_NAME
+#
+# Options:
+#   -b        Extract only the city boundary (bounds)
+#   -s        Extract only the suburbs (admin_level 9) within the city
+#   -a LEVEL  Specify the city admin_level (default: 7)
+#   -v        Enable verbose debug output
+#
+# Example:
+#   sh overpass-api.sh -b -v -a 6 "City of Brisbane"
+#
+# Output files are named using the city name in lowercase with spaces replaced by hyphens.
+
+# Check for required dependencies: jq, curl, osmtogeojson
 check_dependencies() {
     for cmd in jq curl; do
         if ! command -v "$cmd" &>/dev/null; then
@@ -10,6 +29,7 @@ check_dependencies() {
     done
 }
 
+# Check if output file was created and print its size
 check_file_output() {
     local file="$1"
     local description="$2"
@@ -22,6 +42,7 @@ check_file_output() {
     fi
 }
 
+# Make a POST request to the Overpass API with the given query
 make_overpass_request() {
     local query="$1"
     local output_file="$2"
@@ -40,6 +61,7 @@ make_overpass_request() {
     echo "$response" >"$output_file"
 }
 
+# Print debug messages if verbose mode is enabled
 debug() {
     if [ "$verbose" = true ]; then
         echo "[DEBUG] $1"
@@ -53,6 +75,7 @@ verbose=false
 city_name=""
 city_admin_level=7
 
+# Print usage/help message
 usage() {
     echo "Usage: $0 [-v] [-a city_admin_level] (-b|-s) city_name"
     echo "  -b: Extract only bounds for the specified city"
@@ -107,6 +130,7 @@ fi
 # Main script execution
 check_dependencies
 
+# Convert city name to lowercase and replace spaces with hyphens for filenames
 city_name="$1"
 file_name=$(echo "$city_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 
@@ -114,6 +138,7 @@ debug "City name processing complete:"
 debug "  Original: $city_name"
 debug "  File name: $file_name"
 
+# Build Overpass API query for city bounds
 get_bounds_query() {
     local city="$1"
     local admin_level="$2"
@@ -124,6 +149,7 @@ out bb qt;
 EOF
 }
 
+# Build Overpass API query for city suburbs
 get_suburbs_query() {
     local city="$1"
     local admin_level="$2"
@@ -137,6 +163,7 @@ out geom;
 EOF
 }
 
+# Fetch and save city bounds as JSON
 fetch_and_save_bounds() {
     local city="$1"
     local admin_level="$2"
@@ -153,6 +180,7 @@ fetch_and_save_bounds() {
     check_file_output "${filename}.bounds.json" "Bounds of $city"
 }
 
+# Fetch and save city suburbs as OSM JSON and GeoJSON
 fetch_and_save_suburbs() {
     local city="$1"
     local admin_level="$2"
@@ -182,6 +210,7 @@ fetch_and_save_suburbs() {
     check_file_output "${filename}.suburbs.json" "Suburbs of $city (GeoJSON format)"
 }
 
+# Execute the appropriate function based on the selected option
 if [ "$bounds_only" = true ]; then
     fetch_and_save_bounds "$city_name" "$city_admin_level" "$file_name"
 elif [ "$suburbs_only" = true ]; then
