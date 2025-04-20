@@ -34,10 +34,11 @@ const tileLayers = {
 const defaultOptions = {
   tileLayer: tileLayers.carto_dark,
   colors: ["#111111", "#222222", "#333333", "#444444"],
-  bounds: L.latLngBounds(
-    L.latLng(-38.8, 144.0), // Southwest corner
-    L.latLng(-37.0, 146.8), // Northeast corner
-  ),
+  // TODO set to Australia bounds
+  // bounds: L.latLngBounds(
+  //   L.latLng(-38.8, 144.0), // Southwest corner
+  //   L.latLng(-37.0, 146.8), // Northeast corner
+  // ),
   onSelectLayer: (layer) => {},
 };
 
@@ -48,6 +49,7 @@ function getColor(feature, colors) {
 
 function createMap(options = {}) {
   let featureLayer = null;
+  let bounds = null;
   const mergedOptions = {
     ...defaultOptions,
     enableHover: true,
@@ -73,11 +75,11 @@ function createMap(options = {}) {
 
   const map = L.map("map", {
     zoomControl: false,
-    center: mergedOptions.bounds.getCenter(),
+    // center: mergedOptions.bounds.getCenter(),
     zoom: 10,
     maxZoom: 13,
     minZoom: 9,
-    maxBounds: mergedOptions.bounds,
+    // maxBounds: mergedOptions.bounds,
     maxBoundsViscosity: 1.0,
     dragging: true,
   });
@@ -118,7 +120,6 @@ function createMap(options = {}) {
       });
     }
   }
-
 
   function setFeatures(features) {
     console.debug(`[map.js] Setting features: ${features.length} features`);
@@ -168,7 +169,8 @@ function createMap(options = {}) {
 
   function resetZoom() {
     console.debug("[map.js] Resetting zoom");
-    map.setView(mergedOptions.bounds.getCenter(), 10);
+    // map.setView(bounds.getCenter(), 10);
+    map.fitBounds(bounds);
   }
 
   function setInteractive(interactive) {
@@ -178,7 +180,25 @@ function createMap(options = {}) {
     });
   }
 
-  return { map, setFeatures, zoomToFeature, resetZoom, highlightFeature, setInteractive };
+  function setBounds(overpassBounds) {
+    console.debug("[map.js] Setting map bounds:", overpassBounds);
+    bounds = L.latLngBounds(
+      L.latLng(overpassBounds.minlat, overpassBounds.minlon),
+      L.latLng(overpassBounds.maxlat, overpassBounds.maxlon),
+    );
+    map.setMaxBounds(bounds);
+    map.fitBounds(bounds);
+  }
+
+  return {
+    map,
+    setFeatures,
+    zoomToFeature,
+    resetZoom,
+    highlightFeature,
+    setInteractive,
+    setBounds,
+  };
 }
 
 L.Layer.prototype.setInteractive = function (interactive) {

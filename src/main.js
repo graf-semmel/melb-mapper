@@ -16,32 +16,30 @@ const colors = [
   getCSSVarColor("--color-map-4"),
 ];
 
-let geoJson;
 let zoomToFeature;
 let highlightFeature;
-let setInteractive
+let setInteractive;
 let resetZoom;
 let features = [];
 let suburbs = [];
+let bounds = {};
 let game;
 
 async function loadCity(cityKey) {
   console.debug(`[main.js] Loading city: ${cityKey}`);
-  const { features: suburbsRaw, suburbs: loadedSuburbs } =
-    await loadCityData(cityKey);
-  features = suburbsRaw.filter(
-    (feature) => feature.properties.name !== undefined,
-  );
-  suburbs = loadedSuburbs;
+  const cityData = await loadCityData(cityKey);
+  features = cityData.features;
+  suburbs = cityData.suburbs;
+  bounds = cityData.bounds;
 
   // Re-create map and game
   const {
-    map,
     setFeatures,
     zoomToFeature: zoomToFeatureFn,
     resetZoom: resetZoomFn,
     highlightFeature: highlightFeatureFn,
     setInteractive: setInteractiveFn,
+    setBounds,
   } = createMap({
     colors,
     enableHover: true,
@@ -63,6 +61,7 @@ async function loadCity(cityKey) {
     },
   });
   setFeatures(features);
+  setBounds(bounds);
 
   zoomToFeature = zoomToFeatureFn;
   highlightFeature = highlightFeatureFn;
