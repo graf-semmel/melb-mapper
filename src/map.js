@@ -46,15 +46,11 @@ function getColor(feature, colors) {
   return colors[index];
 }
 
-function getCSSVarColor(key) {
-  const rootStyles = getComputedStyle(document.documentElement);
-  return rootStyles.getPropertyValue(key).trim().replace("#", "");
-}
-
-function createMap(features, options = {}) {
+function createMap(options = {}) {
+  let featureLayer = null;
   const mergedOptions = {
     ...defaultOptions,
-    enableHover: true, // Add default for hover effects
+    enableHover: true,
     ...options,
   };
 
@@ -100,7 +96,7 @@ function createMap(features, options = {}) {
   }
 
   function onMouseOut(e) {
-    geoJson.resetStyle(e.target);
+    featureLayer.resetStyle(e.target);
   }
 
   function onClick(e) {
@@ -123,33 +119,66 @@ function createMap(features, options = {}) {
     }
   }
 
-  const geoJson = L.geoJson(features, {
-    style: defaultStyle,
-    onEachFeature: onEachFeature,
-  }).addTo(map);
 
-  map.eachLayer((layer) => {
-    if (layer instanceof L.Marker) {
-      map.removeLayer(layer);
+  function setFeatures(features) {
+    console.debug(`[map.js] Setting features: ${features.length} features`);
+    if (featureLayer) {
+      map.removeLayer(featureLayer);
     }
-  });
+
+    featureLayer = L.geoJson(features, {
+      style: defaultStyle,
+      onEachFeature: onEachFeature,
+    }).addTo(map);
+
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        map.removeLayer(layer);
+      }
+    });
+  }
 
   function zoomToFeature(featureName) {
-    if (!featureName) {
+    console.debug(`[map.js] Zooming to feature: ${featureName}`);
+    if (!featureName || !featureLayer) {
       return;
     }
-    geoJson.eachLayer((layer) => {
+    featureLayer.eachLayer((layer) => {
       if (layer.feature.properties.name === featureName) {
         map.fitBounds(layer.getBounds());
       }
     });
   }
 
+  function highlightFeature(
+    featureName,
+    className = "flicker-target",
+    duration = 1000,
+  ) {
+    console.debug(`[map.js] Highlighting feature: ${featureName}`);
+    featureLayer.eachLayer((layer) => {
+      if (layer.feature.properties.name === featureName) {
+        layer.getElement().classList.add(className);
+        setTimeout(() => {
+          layer.getElement().classList.remove(className);
+        }, duration);
+      }
+    });
+  }
+
   function resetZoom() {
+    console.debug("[map.js] Resetting zoom");
     map.setView(mergedOptions.bounds.getCenter(), 10);
   }
 
-  return { map, geoJson, zoomToFeature, resetZoom };
+  function setInteractive(interactive) {
+    console.debug(`[main.js] Setting map interactivity: ${interactive}`);
+    featureLayer.eachLayer((layer) => {
+      layer.setInteractive(interactive);
+    });
+  }
+
+  return { map, setFeatures, zoomToFeature, resetZoom, highlightFeature, setInteractive };
 }
 
 L.Layer.prototype.setInteractive = function (interactive) {
