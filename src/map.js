@@ -212,7 +212,7 @@ function createMap(options = {}) {
 
   return {
     map,
-    setFeatures,
+    setCity: setFeatures,
     zoomToFeature,
     resetZoom,
     highlightFeature,

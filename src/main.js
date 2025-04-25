@@ -3,7 +3,6 @@ import "leaflet/dist/leaflet.css";
 import { Game } from "./game";
 import { createMap } from "./map";
 import * as geo from "./geo";
-import { bounds } from "leaflet";
 
 function getCSSVarColor(key) {
   const rootStyles = getComputedStyle(document.documentElement);
@@ -18,7 +17,6 @@ const colors = [
 ];
 
 const boundsAustralia = await geo.loadAustraliaBounds();
-let suburbs = [];
 let game;
 
 console.debug("[main.js] Loading map");
@@ -48,23 +46,24 @@ console.debug("[main.js] Map initialized");
 async function loadCity(cityKey) {
   console.debug(`[main.js] Loading city: ${cityKey}`);
   const cityData = await geo.loadCity(cityKey);
-  suburbs = cityData.suburbs;
-
-  // Clear and set the map features
-  map.setFeatures(cityData);
-  // map.setInteractive(true);
-
-  game = Game(suburbs);
+  const suburbs = cityData.suburbs;
   console.debug(`[main.js] Map and game initialized for city: ${cityKey}`);
+
+  map.setCity(cityData);
+  game = Game(suburbs);
+  return {
+    game,
+    suburbs,
+  };
 }
 
 function zoomToSuburb(suburbName) {
   console.debug(`[main.js] Zooming to suburb: ${suburbName}`);
-  zoomToFeature(suburbName);
-  highlightFeature(suburbName, "flicker-target");
+  map.zoomToFeature(suburbName);
+  map.highlightFeature(suburbName, "flicker-target");
 }
 
 const resetZoom = map.resetZoom;
-const setInteractive = map.setInteractive; // Assuming map has this method, based on commented code
+const setInteractive = map.setInteractive;
 
-export { game, suburbs, zoomToSuburb, resetZoom, setInteractive, loadCity };
+export { game, zoomToSuburb, resetZoom, setInteractive, loadCity };

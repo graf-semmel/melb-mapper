@@ -1,6 +1,5 @@
 import {
   game,
-  suburbs,
   zoomToSuburb,
   resetZoom,
   setInteractive,
@@ -41,14 +40,15 @@ searchSuburbsBtn.addEventListener("click", () => {
 citySelectRow.querySelectorAll("button");
 const citySelectBtns = citySelectRow.querySelectorAll("button");
 for (const btn of citySelectBtns) {
-  btn.addEventListener("click", (e) => {
+  btn.addEventListener("click", async (e) => {
     console.debug("[main.js] City selection button clicked");
     for (const otherBtn of citySelectBtns) {
       otherBtn.classList.remove("selected");
     }
     e.target.classList.add("selected");
     const city = e.target.getAttribute("data-city");
-    loadCity(city);
+    const { game, suburbs } = await loadCity(city);
+    updateSearch(suburbs);
   });
 }
 
@@ -59,16 +59,14 @@ const backToMenuBtn = document.querySelector(
 const suburbsDataList = document.getElementById("list_suburbs");
 const suburbInput = document.getElementById("input_suburbs");
 
-if (backToMenuBtn) {
-  backToMenuBtn.addEventListener("click", () => {
-    suburbInput.value = "";
-    resetZoom();
-    document.getElementById("search").classList.add("hidden");
-    document.getElementById("hero").classList.remove("hidden");
-  });
-}
+backToMenuBtn.addEventListener("click", () => {
+  suburbInput.value = "";
+  resetZoom();
+  document.getElementById("search").classList.add("hidden");
+  document.getElementById("hero").classList.remove("hidden");
+});
 
-if (suburbsDataList && suburbs) {
+function updateSearch(suburbs) {
   suburbsDataList.innerHTML = "";
   for (const suburb of suburbs) {
     const option = document.createElement("option");
@@ -77,17 +75,15 @@ if (suburbsDataList && suburbs) {
   }
 }
 
-if (suburbInput) {
-  suburbInput.addEventListener("change", (e) => {
-    const suburbName = e.target.value;
-    zoomToSuburb(suburbName);
-  });
-  suburbInput.addEventListener("input", (e) => {
-    if (e.target.value === "") {
-      resetZoom();
-    }
-  });
-}
+suburbInput.addEventListener("change", (e) => {
+  const suburbName = e.target.value;
+  zoomToSuburb(suburbName);
+});
+suburbInput.addEventListener("input", (e) => {
+  if (e.target.value === "") {
+    resetZoom();
+  }
+});
 
 // --- GAME SECTION ---
 const roundEl = document.getElementById("text_round");
@@ -100,23 +96,19 @@ const backToMenuBtn2 = document.querySelector(
   '#game button[data-action="back-to-menu"]',
 );
 
-if (playAgainBtn) {
-  playAgainBtn.addEventListener("click", () => {
-    game.start();
-    summaryDialog.close();
-  });
-}
+playAgainBtn.addEventListener("click", () => {
+  game.start();
+  summaryDialog.close();
+});
 
-if (backToMenuBtn2) {
-  backToMenuBtn2.addEventListener("click", () => {
-    game.start();
-    summaryDialog.close();
-    document.getElementById("game").classList.add("hidden");
-    document.getElementById("hero").classList.remove("hidden");
-  });
-}
+backToMenuBtn2.addEventListener("click", () => {
+  game.stop();
+  summaryDialog.close();
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("hero").classList.remove("hidden");
+});
 
-function updateUI(state) {
+function updateGame(state) {
   const { currentRound, rounds, gameFinished } = state;
   const score = rounds.reduce((acc, round) => acc + round.getScore(), 0);
 
@@ -152,5 +144,5 @@ function updateUI(state) {
 }
 
 window.eventBus.addEventListener("game:state", (event) => {
-  updateUI(event.detail);
+  updateGame(event.detail);
 });

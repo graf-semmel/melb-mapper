@@ -81,7 +81,7 @@ export function Game(suburbs) {
   function nextRound() {
     const nextIndex = currentRound !== undefined ? currentRound.index : 0;
     if (nextIndex >= rounds.length) {
-      currentRound = undefined;
+      stop();
     } else {
       currentRound = rounds[nextIndex];
       startTimer();
@@ -126,9 +126,18 @@ export function Game(suburbs) {
     nextRound();
   }
 
+  function stop() {
+    console.debug("[game.js] Stopping game");
+    if (timerInterval) {
+      clearInterval(timerInterval);
+    }
+    currentRound = undefined;
+  }
+
   return {
     guessSuburb,
     start,
+    stop,
     getCurrentRound: () => currentRound,
     isGameFinished,
   };
