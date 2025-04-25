@@ -36,8 +36,6 @@ export async function loadCity(cityKey) {
   console.debug(
     `[cityData.js] Loaded ${features.length} features, bounds:`,
     bounds,
-    "suburbs:",
-    suburbs.map((s) => s.name),
   );
   return { features, suburbs, bounds };
 }

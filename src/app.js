@@ -138,6 +138,6 @@ function updateUI(state) {
   roundEl.innerHTML = `${roundString} | ${timeLeftString}`;
 }
 
-game.subscribe((state) => {
-  updateUI(state);
-});
+// game.subscribe((state) => {
+//   updateUI(state);
+// });

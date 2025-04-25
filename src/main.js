@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import { Game } from "./game";
 import { createMap } from "./map";
 import * as geo from "./geo";
+import { bounds } from "leaflet";
 
 function getCSSVarColor(key) {
   const rootStyles = getComputedStyle(document.documentElement);
@@ -16,57 +17,44 @@ const colors = [
   getCSSVarColor("--color-map-4"),
 ];
 
-let zoomToFeature;
-let highlightFeature;
-let setInteractive;
-let resetZoom;
-let features = [];
+const boundsAustralia = await geo.loadAustraliaBounds();
 let suburbs = [];
-let bounds = {};
 let game;
+
+console.debug("[main.js] Loading map");
+const map = createMap({
+  colors,
+  enableHover: true,
+  bounds: boundsAustralia,
+  onSelectLayer: (layer) => {
+    if (game.isGameFinished()) {
+      return;
+    }
+
+    const suburb = game.getCurrentRound().suburb;
+    const guessedCorrect = game.guessSuburb(layer.feature.properties.name);
+
+    highlightFeature(
+      layer.feature.properties.name,
+      guessedCorrect ? "flicker-correct" : "flicker-wrong",
+    );
+    if (!guessedCorrect) {
+      highlightFeature(suburb, "flicker-target");
+    }
+  },
+});
+console.debug("[main.js] Map initialized");
 
 async function loadCity(cityKey) {
   console.debug(`[main.js] Loading city: ${cityKey}`);
   const cityData = await geo.loadCity(cityKey);
-  features = cityData.features;
   suburbs = cityData.suburbs;
-  bounds = cityData.bounds;
 
-  // Re-create map and game
-  const {
-    setFeatures,
-    zoomToFeature: zoomToFeatureFn,
-    resetZoom: resetZoomFn,
-    highlightFeature: highlightFeatureFn,
-    setInteractive: setInteractiveFn,
-    setBounds,
-  } = createMap({
-    colors,
-    enableHover: true,
-    onSelectLayer: (layer) => {
-      if (game.isGameFinished()) {
-        return;
-      }
+  // Clear and set the map features
+  map.setFeatures(cityData.features);
+  map.setBounds(cityData.bounds);
+  // map.setInteractive(true);
 
-      const suburb = game.getCurrentRound().suburb;
-      const guessedCorrect = game.guessSuburb(layer.feature.properties.name);
-
-      highlightFeature(
-        layer.feature.properties.name,
-        guessedCorrect ? "flicker-correct" : "flicker-wrong",
-      );
-      if (!guessedCorrect) {
-        highlightFeature(suburb, "flicker-target");
-      }
-    },
-  });
-  setFeatures(features);
-  setBounds(bounds);
-
-  zoomToFeature = zoomToFeatureFn;
-  highlightFeature = highlightFeatureFn;
-  resetZoom = resetZoomFn;
-  setInteractive = setInteractiveFn;
   game = Game(suburbs);
   console.debug(`[main.js] Map and game initialized for city: ${cityKey}`);
 }
@@ -77,10 +65,7 @@ function zoomToSuburb(suburbName) {
   highlightFeature(suburbName, "flicker-target");
 }
 
-// Load Melbourne by default on module initialization
-if (!game) {
-  console.debug("[main.js] Initializing default city: melbourne");
-  await loadCity("melbourne");
-}
+const resetZoom = map.resetZoom;
+const setInteractive = map.setInteractive; // Assuming map has this method, based on commented code
 
 export { game, suburbs, zoomToSuburb, resetZoom, setInteractive, loadCity };

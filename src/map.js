@@ -31,17 +31,6 @@ const tileLayers = {
   },
 };
 
-const defaultOptions = {
-  tileLayer: tileLayers.carto_dark,
-  colors: ["#111111", "#222222", "#333333", "#444444"],
-  // TODO set to Australia bounds
-  // bounds: L.latLngBounds(
-  //   L.latLng(-38.8, 144.0), // Southwest corner
-  //   L.latLng(-37.0, 146.8), // Northeast corner
-  // ),
-  onSelectLayer: (layer) => {},
-};
-
 function getColor(feature, colors) {
   const index = feature.properties.name.length % colors.length;
   return colors[index];
@@ -49,12 +38,30 @@ function getColor(feature, colors) {
 
 function createMap(options = {}) {
   let featureLayer = null;
-  let bounds = null;
+
   const mergedOptions = {
-    ...defaultOptions,
+    tileLayer: tileLayers.carto_dark,
+    colors: ["#111111", "#222222", "#333333", "#444444"],
     enableHover: true,
     ...options,
   };
+  console.debug("[map.js] Create map options:", mergedOptions);
+
+  let bounds = overpassBoundsToLatLngBounds(mergedOptions.bounds);
+  const mapOptions = {
+    zoomControl: false,
+    maxZoom: 13,
+    minZoom: 5,
+    zoom: 5,
+    maxBoundsViscosity: 1.0,
+    dragging: true,
+    zoomSnap: 0.5,
+    bounds: bounds,
+    center: bounds.getCenter(),
+  };
+  console.debug("[map.js] Leaflet map options:", mapOptions);
+
+  const map = L.map("map", mapOptions);
 
   function defaultStyle(feature) {
     return {
@@ -72,17 +79,6 @@ function createMap(options = {}) {
       fillOpacity: 0.8,
     };
   }
-
-  const map = L.map("map", {
-    zoomControl: false,
-    // center: mergedOptions.bounds.getCenter(),
-    zoom: 10,
-    maxZoom: 13,
-    minZoom: 9,
-    // maxBounds: mergedOptions.bounds,
-    maxBoundsViscosity: 1.0,
-    dragging: true,
-  });
 
   L.tileLayer(mergedOptions.tileLayer.url, {
     attribution: mergedOptions.tileLayer.attribution,
@@ -181,12 +177,25 @@ function createMap(options = {}) {
 
   function setBounds(overpassBounds) {
     console.debug("[map.js] Setting map bounds:", overpassBounds);
-    bounds = L.latLngBounds(
+    bounds = overpassBoundsToLatLngBounds(overpassBounds);
+    // Display the bounds on the map - will fail if features are loaded ¯\_(ツ)_/¯
+    // const rectangle = L.rectangle(bounds, { color: "#ff7800", weight: 1 });
+    // rectangle.addTo(map);
+    // console.log("[map.js] Rectangle bounds:", rectangle.getBounds());
+
+    map.flyToBounds(bounds, {
+      duration: 0.5,
+    });
+    setTimeout(() => {
+      map.setMaxBounds(bounds);
+    }, 500);
+  }
+
+  function overpassBoundsToLatLngBounds(overpassBounds) {
+    return L.latLngBounds(
       L.latLng(overpassBounds.minlat, overpassBounds.minlon),
       L.latLng(overpassBounds.maxlat, overpassBounds.maxlon),
     );
-    map.setMaxBounds(bounds);
-    map.fitBounds(bounds);
   }
 
   return {
@@ -220,4 +229,4 @@ L.Layer.prototype.setInteractive = function (interactive) {
   }
 };
 
-export { createMap, tileLayers, defaultOptions };
+export { createMap, tileLayers };
