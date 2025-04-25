@@ -169,7 +169,6 @@ function createMap(options = {}) {
 
   function resetZoom() {
     console.debug("[map.js] Resetting zoom");
-    // map.setView(bounds.getCenter(), 10);
     map.fitBounds(bounds);
   }
 

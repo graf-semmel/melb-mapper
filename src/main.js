@@ -2,7 +2,7 @@ import "./style.css";
 import "leaflet/dist/leaflet.css";
 import { Game } from "./game";
 import { createMap } from "./map";
-import { loadCityData } from "./cityData";
+import * as geo from "./geo";
 
 function getCSSVarColor(key) {
   const rootStyles = getComputedStyle(document.documentElement);
@@ -27,7 +27,7 @@ let game;
 
 async function loadCity(cityKey) {
   console.debug(`[main.js] Loading city: ${cityKey}`);
-  const cityData = await loadCityData(cityKey);
+  const cityData = await geo.loadCity(cityKey);
   features = cityData.features;
   suburbs = cityData.suburbs;
   bounds = cityData.bounds;
