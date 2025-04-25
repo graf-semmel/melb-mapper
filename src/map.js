@@ -53,6 +53,7 @@ function createMap(options = {}) {
     maxZoom: 13,
     minZoom: 5,
     zoom: 5,
+    maxBoundsViscosity: 0.8,
     dragging: true,
     zoomSnap: 0.5,
     bounds: bounds,
@@ -182,10 +183,11 @@ function createMap(options = {}) {
   function setBounds(overpassBounds) {
     console.debug("[map.js] Setting map bounds:", overpassBounds);
     bounds = overpassBoundsToLatLngBounds(overpassBounds);
+    
     // Display the bounds on the map - will fail if features are loaded ¯\_(ツ)_/¯
-    const rectangle = L.rectangle(bounds, { color: "#ff7800", weight: 1 });
-    rectangle.addTo(map);
-    console.log("[map.js] Rectangle bounds:", rectangle.getBounds());
+    // const rectangle = L.rectangle(bounds, { color: "#ff7800", weight: 1 });
+    // rectangle.addTo(map);
+    // console.log("[map.js] Rectangle bounds:", rectangle.getBounds());
 
     map.flyToBounds(bounds, {
       duration: 0.5,
@@ -196,13 +198,16 @@ function createMap(options = {}) {
   }
 
   function overpassBoundsToLatLngBounds(overpassBounds) {
-    console.log("overpassBounds:", overpassBounds);
-    const bounds = L.latLngBounds(
-      L.latLng(overpassBounds.minlat, overpassBounds.minlon),
-      L.latLng(overpassBounds.maxlat, overpassBounds.maxlon),
+    const extentBy = 0.2;
+    const sw = L.latLng(
+      overpassBounds.minlat - extentBy,
+      overpassBounds.minlon - extentBy,
     );
-    console.log("leaflet LatLngBounds:", bounds);
-    return bounds;
+    const ne = L.latLng(
+      overpassBounds.maxlat + extentBy,
+      overpassBounds.maxlon + extentBy,
+    );
+    return L.latLngBounds(sw, ne);
   }
 
   return {
