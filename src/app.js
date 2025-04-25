@@ -1,4 +1,11 @@
-import { game, suburbs, zoomToSuburb, resetZoom, setInteractive, loadCity } from "./main.js";
+import {
+  game,
+  suburbs,
+  zoomToSuburb,
+  resetZoom,
+  setInteractive,
+  loadCity,
+} from "./main.js";
 
 // --- HERO SECTION ---
 const startGameBtn = document.getElementById("start_game");
@@ -14,13 +21,13 @@ function transitionFromHero(nextSectionId) {
       heroSection.classList.remove("animate-out");
       document.getElementById(nextSectionId).classList.remove("hidden");
     },
-    { once: true }
+    { once: true },
   );
   heroSection.classList.add("animate-out");
 }
 
 startGameBtn.addEventListener("click", () => {
-  transitionFromHero("game");
+        transitionFromHero("game");
   setInteractive(true);
   game.start();
 });
@@ -31,21 +38,24 @@ searchSuburbsBtn.addEventListener("click", () => {
 });
 
 // --- CITY SELECTION ---
-if (citySelectRow) {
-  citySelectRow.addEventListener("click", async (e) => {
-    if (e.target.classList.contains("city-btn")) {
-      for (const btn of document.querySelectorAll(".city-btn")) {
-        btn.classList.remove("selected");
-      }
-      e.target.classList.add("selected");
-      const city = e.target.getAttribute("data-city");
-      await loadCity(city);
+citySelectRow.querySelectorAll("button")
+const citySelectBtns = citySelectRow.querySelectorAll("button");
+for (const btn of citySelectBtns) {
+  btn.addEventListener("click", (e) => {
+    console.debug("[main.js] City selection button clicked");
+    for (const otherBtn of citySelectBtns) {
+      otherBtn.classList.remove("selected");
     }
+    e.target.classList.add("selected");
+    const city = e.target.getAttribute("data-city");
+    loadCity(city);
   });
 }
 
 // --- SEARCH SECTION ---
-const backToMenuBtn = document.querySelector('#search button[data-action="back-to-menu"]');
+const backToMenuBtn = document.querySelector(
+  '#search button[data-action="back-to-menu"]',
+);
 const suburbsDataList = document.getElementById("list_suburbs");
 const suburbInput = document.getElementById("input_suburbs");
 
@@ -86,7 +96,9 @@ const scoreEl = document.getElementById("final_score");
 const summaryDialog = document.getElementById("summary");
 const table = document.querySelector("#table_summary tbody");
 const playAgainBtn = document.getElementById("play_again");
-const backToMenuBtn2 = document.querySelector('#game button[data-action="back-to-menu"]');
+const backToMenuBtn2 = document.querySelector(
+  '#game button[data-action="back-to-menu"]',
+);
 
 if (playAgainBtn) {
   playAgainBtn.addEventListener("click", () => {
@@ -133,7 +145,8 @@ function updateUI(state) {
 
   suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
   const roundString = `Round <strong class="secondary">${currentRound.index}</strong> of ${rounds.length}`;
-  const timeLeftClass = currentRound.getTimeLeft() <= 3 ? "danger" : "secondary";
+  const timeLeftClass =
+    currentRound.getTimeLeft() <= 3 ? "danger" : "secondary";
   const timeLeftString = `Time left <strong class="${timeLeftClass}">${currentRound.getTimeLeft()}</strong>s`;
   roundEl.innerHTML = `${roundString} | ${timeLeftString}`;
 }

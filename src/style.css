@@ -414,3 +414,28 @@ mark {
 .gap-M {
   gap: var(--space-M);
 }
+
+/* Hide the buttons by default */
+#start_game,
+#search_suburbs {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Show the buttons only if a .selected button exists in #city-select-row */
+#city-select-row {
+  button {
+    opacity: 0.5;
+    &.selected,
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &:has(button.selected) ~ #start_game,
+  &:has(button.selected) ~ #search_suburbs {
+    pointer-events: auto;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+  }
+}
