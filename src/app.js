@@ -27,7 +27,7 @@ function transitionFromHero(nextSectionId) {
 }
 
 startGameBtn.addEventListener("click", () => {
-        transitionFromHero("game");
+  transitionFromHero("game");
   setInteractive(true);
   game.start();
 });
@@ -38,7 +38,7 @@ searchSuburbsBtn.addEventListener("click", () => {
 });
 
 // --- CITY SELECTION ---
-citySelectRow.querySelectorAll("button")
+citySelectRow.querySelectorAll("button");
 const citySelectBtns = citySelectRow.querySelectorAll("button");
 for (const btn of citySelectBtns) {
   btn.addEventListener("click", (e) => {
@@ -151,6 +151,6 @@ function updateUI(state) {
   roundEl.innerHTML = `${roundString} | ${timeLeftString}`;
 }
 
-// game.subscribe((state) => {
-//   updateUI(state);
-// });
+window.eventBus.addEventListener("game:state", (event) => {
+  updateUI(event.detail);
+});

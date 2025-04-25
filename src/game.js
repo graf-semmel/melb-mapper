@@ -110,12 +110,6 @@ export function Game(suburbs) {
     return currentRound === undefined;
   }
 
-  function subscribe(observer) {
-    window.eventBus.addEventListener("game:state", (event) => {
-      observer(event.detail);
-    });
-  }
-
   function start() {
     if (timerInterval) {
       clearInterval(timerInterval);
@@ -134,7 +128,6 @@ export function Game(suburbs) {
 
   return {
     guessSuburb,
-    subscribe,
     start,
     getCurrentRound: () => currentRound,
     isGameFinished,

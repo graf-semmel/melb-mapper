@@ -34,12 +34,12 @@ const map = createMap({
     const suburb = game.getCurrentRound().suburb;
     const guessedCorrect = game.guessSuburb(layer.feature.properties.name);
 
-    highlightFeature(
+    map.highlightFeature(
       layer.feature.properties.name,
       guessedCorrect ? "flicker-correct" : "flicker-wrong",
     );
     if (!guessedCorrect) {
-      highlightFeature(suburb, "flicker-target");
+      map.highlightFeature(suburb, "flicker-target");
     }
   },
 });
@@ -51,8 +51,7 @@ async function loadCity(cityKey) {
   suburbs = cityData.suburbs;
 
   // Clear and set the map features
-  map.setFeatures(cityData.features);
-  map.setBounds(cityData.bounds);
+  map.setFeatures(cityData);
   // map.setInteractive(true);
 
   game = Game(suburbs);
