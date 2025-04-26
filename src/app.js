@@ -97,13 +97,15 @@ const backToMenuBtn2 = document.querySelector(
 );
 
 playAgainBtn.addEventListener("click", () => {
-  game.start();
   summaryDialog.close();
+  resetZoom();
+  game.start();
 });
 
 backToMenuBtn2.addEventListener("click", () => {
   game.stop();
   summaryDialog.close();
+  resetZoom();
   document.getElementById("game").classList.add("hidden");
   document.getElementById("hero").classList.remove("hidden");
 });

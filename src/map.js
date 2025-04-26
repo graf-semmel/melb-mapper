@@ -117,7 +117,7 @@ function createMap(options = {}) {
     }
   }
 
-  function setFeatures({ features, bounds }) {
+  function setCity({ features, bounds }) {
     console.debug(`[map.js] Setting features: ${features.length} features`);
     if (featureLayer) {
       map.removeLayer(featureLayer);
@@ -191,28 +191,22 @@ function createMap(options = {}) {
 
     map.flyToBounds(bounds, {
       duration: 0.5,
+      padding: [0, 0],
     });
     setTimeout(() => {
-      map.setMaxBounds(bounds);
+      map.setMaxBounds(bounds.pad(0.2));
     }, 500);
   }
 
   function overpassBoundsToLatLngBounds(overpassBounds) {
-    const extentBy = 0.2;
-    const sw = L.latLng(
-      overpassBounds.minlat - extentBy,
-      overpassBounds.minlon - extentBy,
-    );
-    const ne = L.latLng(
-      overpassBounds.maxlat + extentBy,
-      overpassBounds.maxlon + extentBy,
-    );
+    const sw = L.latLng(overpassBounds.minlat, overpassBounds.minlon);
+    const ne = L.latLng(overpassBounds.maxlat, overpassBounds.maxlon);
     return L.latLngBounds(sw, ne);
   }
 
   return {
     map,
-    setCity: setFeatures,
+    setCity,
     zoomToFeature,
     resetZoom,
     highlightFeature,
