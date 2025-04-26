@@ -55,17 +55,23 @@
   </head>
 
   <body>
-    <div id="map"></div>
+    <section id="map"></section>
     <!-- hero -->
     <section id="hero" class="flex column justify-center align-center">
       <h1 class="mb-M">MELBMAPPER</h1>
-      <div id="city-select-row" class="flex row align-center gap-M mb-M">
-        <button data-city="melbourne">Melbourne</button>
-        <button data-city="sydney">Sydney</button>
-      </div>
-      <button id="start_game" class="text-L">Start Game</button>
-      <button id="search_suburbs" class="text-S">Search Suburbs</button>
-      <div class="flex align-center gap-S mt-M">
+      <section id="select-city-section" class="flex row align-center gap-M mb-M">
+        <button data-city="melbourne">
+          <h2>Melbourne</h2>
+        </button>
+        <button data-city="sydney">
+          <h2>Sydney</h2>
+        </button>
+      </section>
+      <section id="select-mode-section" class="">
+        <button id="start_game">Start Game</button>
+        <button id="search_suburbs">Search Suburbs</button>
+      </section>
+      <section class="flex align-center gap-S mt-M">
         <a
           href="https://github.com/graf-semmel/melb-mapper"
           target="_blank"
@@ -80,7 +86,7 @@
         >
           <img src="/bluesky.svg" alt="Bluesky" width="32" height="32" />
         </a>
-      </div>
+      </section>
     </section>
 
     <!-- search -->
@@ -103,14 +109,14 @@
       <div class="flex column align-center">
         <button data-action="back-to-menu" class="text-S">Back to Menu</button>
         <hgroup>
-          <h1 id="text_suburb">Find <strong>Brunswick</strong></h1>
+          <h2 id="text_suburb">Find <strong>Brunswick</strong></h2>
           <p id="text_round">Round 1 of 5</p>
         </hgroup>
       </div>
       <dialog id="summary">
         <main class="flex column align-center">
           <hgroup>
-            <h1>Game Finished</h1>
+            <h2>Game Finished</h2>
             <p id="final_score">Your total score is <strong>0</strong></p>
           </hgroup>
           <table id="table_summary">

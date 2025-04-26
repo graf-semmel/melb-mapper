@@ -13,20 +13,24 @@
   line-height: 1.5;
 
   /* Text Sizes */
+  --text-XS: 0.6rem;
   --text-S: 0.8rem;
   --text-M: 1rem;
-  --text-L: 1.5rem;
+  --text-L: 1.4rem;
+  --text-XL: 2rem;
+  --text-XXL: 3rem;
 
   /* Base Colors */
   --color-primary: #69247c;
   --color-primary-text: #ffffff;
-  --color-secondary: #fac67a;
+  --color-secondary: rgba(250, 198, 122, 1);
   --color-secondary-text: #242424;
   --color-danger: #e74c3c;
   --color-warning: #f1c40f;
   --color-info: #1abc9c;
   --background: #242424;
   --color: #eeeeee;
+  --color-glow: rgba(250, 198, 122, 7);
 
   /* Mao colors */
   --color-map-1: var(--color-primary);
@@ -129,11 +133,10 @@ button {
   text-transform: uppercase;
   transition: all 0.2s;
   user-select: none;
-
-  --color-glow: var(--color-secondary);
-  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-shadow: rgba(0, 0, 0, 0.7);
   --translate: 1rem;
 
+  &.selected,
   &:hover {
     text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
       var(--translate) var(--translate) 5px var(--color-shadow),
@@ -415,15 +418,14 @@ mark {
   gap: var(--space-M);
 }
 
-/* Hide the buttons by default */
-#start_game,
-#search_suburbs {
+#select-mode-section button {
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.4;
+  color: var(--color);
 }
 
-/* Show the buttons only if a .selected button exists in #city-select-row */
-#city-select-row {
+/* Show the buttons only if a .selected button exists in #select-city-section */
+#select-city-section {
   button {
     opacity: 0.5;
     &.selected,
@@ -432,10 +434,24 @@ mark {
     }
   }
 
-  &:has(button.selected) ~ #start_game,
-  &:has(button.selected) ~ #search_suburbs {
+  &:has(button.selected) ~ #select-mode-section button {
     pointer-events: auto;
     opacity: 1;
-    transition: opacity 0.2s ease-in-out;
+    color: var(--color-secondary);
   }
+}
+
+h1{
+  font-size: var(--text-XXL);
+  font-weight: 600;
+}
+
+h2{
+  font-size: var(--text-XL);
+  font-weight: 600;
+}
+
+h3{
+  font-size: var(--text-L);
+  font-weight: 600;
 }

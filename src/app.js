@@ -10,7 +10,7 @@ import {
 const startGameBtn = document.getElementById("start_game");
 const searchSuburbsBtn = document.getElementById("search_suburbs");
 const heroSection = document.getElementById("hero");
-const citySelectRow = document.getElementById("city-select-row");
+const selectCitySection = document.getElementById("select-city-section");
 
 function transitionFromHero(nextSectionId) {
   heroSection.addEventListener(
@@ -37,16 +37,16 @@ searchSuburbsBtn.addEventListener("click", () => {
 });
 
 // --- CITY SELECTION ---
-citySelectRow.querySelectorAll("button");
-const citySelectBtns = citySelectRow.querySelectorAll("button");
+selectCitySection.querySelectorAll("button");
+const citySelectBtns = selectCitySection.querySelectorAll("button");
 for (const btn of citySelectBtns) {
   btn.addEventListener("click", async (e) => {
     console.debug("[main.js] City selection button clicked");
     for (const otherBtn of citySelectBtns) {
       otherBtn.classList.remove("selected");
     }
-    e.target.classList.add("selected");
-    const city = e.target.getAttribute("data-city");
+    btn.classList.add("selected");
+    const city = btn.getAttribute("data-city");
     const { game, suburbs } = await loadCity(city);
     updateSearch(suburbs);
   });
