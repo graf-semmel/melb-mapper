@@ -1,6 +1,11 @@
 // Utility for loading city features and suburbs from GeoJSON/JSON via fetch()
 
-import { publishLoadingCityEnd, publishLoadingCityProgress, publishLoadingCitySart } from "./eventbus";
+import {
+  publishLoadingCityEnd,
+  publishLoadingCityProgress,
+  publishLoadingCityProgressIndeterminate,
+  publishLoadingCitySart,
+} from "./eventbus";
 
 const cityFiles = {
   melbourne: {
@@ -21,9 +26,16 @@ export async function loadCity(cityKey) {
     cityFiles[cityKey] || cityFiles.melbourne;
 
   // fetch suburbs GeoJSON
-  const suburbsGeoJson = await fetchWithProgress(suburbsFilePath, (progress) => {
-    publishLoadingCityProgress(progress);
-  });
+  const suburbsGeoJson = await fetchWithProgress(
+    suburbsFilePath,
+    (progress) => {
+      if (progress < 0) {
+        publishLoadingCityProgressIndeterminate();
+      } else {
+        publishLoadingCityProgress(progress);
+      }
+    },
+  );
 
   const features = suburbsGeoJson.features.filter(
     (f) => f.properties.name !== undefined,
@@ -65,6 +77,9 @@ async function fetchWithProgress(url, onProgress) {
   const contentLength = response.headers.get("Content-Length");
   if (!contentLength) {
     console.warn(`Content-Length not available for ${url}`);
+    if (onProgress) {
+      onProgress(-1); // Indeterminate progress
+    }
     return await response.json(); // Fallback to normal fetch
   }
 

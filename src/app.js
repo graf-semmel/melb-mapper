@@ -157,12 +157,13 @@ subscribeToGameState((state) => {
 
 subscribeToLoadingCityState((state) => {
   if (state.state === "start") {
-    progressBar.value = 0;
+    progressBar.setAttribute("value", 0);
     progressDialog.showModal();
   } else if (state.state === "end") {
     progressDialog.close();
-    progressBar.value = 100;
   } else if (state.state === "progress") {
     progressBar.value = state.progress;
+  } else if (state.state === "indeterminate") {
+    progressBar.removeAttribute("value");
   }
 });

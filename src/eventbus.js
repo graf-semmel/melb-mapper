@@ -66,6 +66,18 @@ export function publishLoadingCityProgress(progress) {
   );
 }
 
+export function publishLoadingCityProgressIndeterminate(){
+  console.debug("[eventbus.js] Publishing loading city progress indeterminate.");
+  window.eventBus.dispatchEvent(
+    new CustomEvent("loading:city:state", {
+      detail: {
+        state: "indeterminate",
+        progress: -1,
+      },
+    }),
+  );
+}
+
 export function subscribeToLoadingCityState(callback) {
   if (typeof callback !== "function") {
     console.error("[eventbus.js] Callback is not a function.");
