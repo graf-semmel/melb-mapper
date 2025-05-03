@@ -1,4 +1,7 @@
-import { subscribeToGameState } from "./eventbus.js";
+import {
+  subscribeToGameState,
+  subscribeToLoadingCityState,
+} from "./eventbus.js";
 import {
   game,
   zoomToSuburb,
@@ -12,6 +15,8 @@ const startGameBtn = document.getElementById("start_game");
 const searchSuburbsBtn = document.getElementById("search_suburbs");
 const heroSection = document.getElementById("hero");
 const selectCitySection = document.getElementById("select-city-section");
+const progressDialog = document.getElementById("progress-dialog");
+const progressBar = progressDialog.querySelector("progress");
 
 function transitionFromHero(nextSectionId) {
   heroSection.addEventListener(
@@ -148,4 +153,16 @@ function updateGame(state) {
 
 subscribeToGameState((state) => {
   updateGame(state);
+});
+
+subscribeToLoadingCityState((state) => {
+  if (state.state === "start") {
+    progressBar.value = 0;
+    progressDialog.showModal();
+  } else if (state.state === "end") {
+    progressDialog.close();
+    progressBar.value = 100;
+  } else if (state.state === "progress") {
+    progressBar.value = state.progress;
+  }
 });

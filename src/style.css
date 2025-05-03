@@ -441,17 +441,36 @@ mark {
   }
 }
 
-h1{
+h1 {
   font-size: var(--text-XXL);
   font-weight: 600;
 }
 
-h2{
+h2 {
   font-size: var(--text-XL);
   font-weight: 600;
 }
 
-h3{
+h3 {
   font-size: var(--text-L);
   font-weight: 600;
+}
+
+dialog#progress-dialog {
+  height: 20%;
+  width: 80%;
+
+  main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  progress {
+    width: 90%;
+    height: 2rem;
+    accent-color: var(--color-secondary);
+  }
 }
