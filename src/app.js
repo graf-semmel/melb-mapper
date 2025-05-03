@@ -1,3 +1,4 @@
+import { subscribeToGameState } from "./eventbus.js";
 import {
   game,
   zoomToSuburb,
@@ -145,6 +146,6 @@ function updateGame(state) {
   roundEl.innerHTML = `${roundString} | ${timeLeftString}`;
 }
 
-window.eventBus.addEventListener("game:state", (event) => {
-  updateGame(event.detail);
+subscribeToGameState((state) => {
+  updateGame(state);
 });

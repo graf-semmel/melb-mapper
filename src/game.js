@@ -1,4 +1,4 @@
-window.eventBus = new EventTarget();
+import { publishGameState } from "./eventbus";
 
 function createRound(index, suburb) {
   let guessedSuburb = undefined;
@@ -55,9 +55,7 @@ export function Game(suburbs) {
       timeLeft: state.currentRound?.getTimeLeft(),
     });
 
-    window.eventBus.dispatchEvent(
-      new CustomEvent("game:state", { detail: state }),
-    );
+    publishGameState(state);
   }
 
   function startTimer() {
