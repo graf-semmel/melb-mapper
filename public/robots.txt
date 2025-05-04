@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://melb-mapper.pages.dev/sitemap.xml
+Sitemap: https://ozmapper.app/sitemap.xml

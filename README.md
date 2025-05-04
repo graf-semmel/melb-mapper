@@ -1,8 +1,8 @@
-# MELBMAPPER 🎮
+# OZMAPPER (former MELBMAPPER) 🎮
 
 A fun and interactive game to learn Melbourne's (and Sydney's) suburbs! Test your knowledge by finding suburbs on the map.
 
-🎮 [PLAY NOW ](https://melb-mapper.pages.dev/) 🎮
+🎮 [PLAY NOW ](https://ozmapper.app/) 🎮
 
 ## Features
 
