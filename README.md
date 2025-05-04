@@ -45,12 +45,13 @@ The project uses a modular architecture with the following key files in the `src
 - `geo.js` - Handles fetching and processing of geographical data (suburbs, boundaries) for different cities.
 - `main.js` - Acts as the main application entry point, initializes the map and game, loads city data, and orchestrates interactions between different modules.
 - `map.js` - Manages Leaflet map creation, configuration, styling, feature layers, and user interactions (zoom, pan, click, hover).
-- `style.css` - Provides all CSS styles, variables, layout rules, and animations for the application interface.
+- `eventbus.js` - Implements event bus functionality for decoupled module communication.
 - `utils.js` - Contains miscellaneous utility functions used across the application.
+- `style.css` - Provides all CSS styles, variables, layout rules, and animations for the application interface.
 
 The main user interface is defined in `index.html` in the root directory.
 
-## Local Development
+### Run locally
 
 To run the project locally:
 
