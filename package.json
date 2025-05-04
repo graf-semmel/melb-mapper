@@ -1,7 +1,30 @@
 {
   "name": "ozmapper",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "A fun, interactive map quiz for Melbourne & Sydney",
+  "author": "graf.semmel@googlemail.com",
+  "license": "CC BY-NC-SA 4.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/graf-semmel/melb-mapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/graf-semmel/melb-mapper/issues"
+  },
+  "homepage": "https://github.com/graf-semmel/melb-mapper#readme",
+  "keywords": [
+    "ozmapper",
+    "oz",
+    "australia",
+    "melbourne",
+    "sydney",
+    "map",
+    "game",
+    "leaflet",
+    "suburbs",
+    "quiz"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite --open",
