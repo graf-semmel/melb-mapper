@@ -56,7 +56,9 @@ export async function loadCity(cityKey) {
   const features = suburbsGeoJson.features.filter(
     (f) => f.properties.name !== undefined,
   );
-  const suburbs = features.map((f) => ({ name: f.properties.name }));
+  const suburbs = features
+    .map((f) => ({ name: f.properties.name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   // fetch bounds JSON
   const boundsResp = await fetch(boundsFilePath);
