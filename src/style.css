@@ -320,19 +320,27 @@ mark {
   text-align: center;
 
   & h1 {
+    --font-size-min: 3rem;
+    --font-size-max: 10rem;
+    --font-size: clamp(var(--font-size-min), 20vw, var(--font-size-max));
+    font-size: var(--font-size);
     width: 100%;
-    font-size: clamp(1rem, 10vw, 5rem);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    animation: hover-glow 1s ease-in-out forwards;
+    transform: scaleX(0.9);
     color: var(--color-secondary);
     opacity: 0;
+    letter-spacing: -0.1rem;
     text-shadow: none;
     user-select: none;
+    animation: hover-glow 1s ease-in-out forwards;
 
     --color-glow: var(--color-secondary);
     --color-shadow: rgba(0, 0, 0, 0.5);
+
+    small {
+      font-size: clamp(calc(var(--font-size) * 0.5), 20vw, calc(var(--font-size) * 0.5));
+    }
   }
 
   &.hidden {
@@ -368,7 +376,6 @@ mark {
 @keyframes hover-glow {
   100% {
     opacity: 1;
-    transform: translateY(-5px);
     text-shadow:
       0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
       0 0 40px var(--color-glow), 20px 20px 5px var(--color-shadow),
@@ -378,7 +385,6 @@ mark {
 
 @keyframes hover-glow-reverse {
   0% {
-    transform: translateY(-5px);
     opacity: 1;
     text-shadow:
       0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
@@ -386,7 +392,6 @@ mark {
       20px 20px 10px var(--color-shadow);
   }
   100% {
-    transform: translateY(0);
     opacity: 0;
     text-shadow: none;
   }
