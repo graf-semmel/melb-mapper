@@ -43,17 +43,23 @@ searchSuburbsBtn.addEventListener("click", () => {
 });
 
 // --- CITY SELECTION ---
+let selectedCity;
 selectCitySection.querySelectorAll("button");
 const citySelectBtns = selectCitySection.querySelectorAll("button");
 for (const btn of citySelectBtns) {
   btn.addEventListener("click", async (e) => {
     console.debug("[main.js] City selection button clicked");
+    const city = btn.getAttribute("data-city");
+    if (selectedCity === city) {
+      console.debug(`[main.js] City already selected: ${city}`);
+      return;
+    }
+    selectedCity = city;
     for (const otherBtn of citySelectBtns) {
       otherBtn.classList.remove("selected");
     }
     btn.classList.add("selected");
-    const city = btn.getAttribute("data-city");
-    const { game, suburbs } = await loadCity(city);
+    const { suburbs } = await loadCity(selectedCity);
     updateSearch(suburbs);
   });
 }

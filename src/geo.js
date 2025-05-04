@@ -11,19 +11,35 @@ const cityFiles = {
   melbourne: {
     suburbs: "/melbourne.suburbs.json",
     bounds: "/melbourne.bounds.json",
+    data: undefined,
   },
   sydney: {
     suburbs: "/sydney.suburbs.json",
     bounds: "/sydney.bounds.json",
+    data: undefined,
   },
 };
 
 export async function loadCity(cityKey) {
   console.debug(`[cityData.js] Loading city: ${cityKey}`);
+
+  const cityFile = cityFiles[cityKey];
+  if (!cityFile) {
+    console.error(`[cityData.js] City not found: ${cityKey}`);
+    throw new Error(`City not found: ${cityKey}`);
+  }
+  if (
+    cityFile.data?.features &&
+    cityFile.data?.suburbs &&
+    cityFile.data?.bounds
+  ) {
+    console.debug(`[cityData.js] City data already loaded: ${cityKey}`);
+    return cityFiles[cityKey].data;
+  }
+
   publishLoadingCitySart();
 
-  const { suburbs: suburbsFilePath, bounds: boundsFilePath } =
-    cityFiles[cityKey] || cityFiles.melbourne;
+  const { suburbs: suburbsFilePath, bounds: boundsFilePath } = cityFile;
 
   // fetch suburbs GeoJSON
   const suburbsGeoJson = await fetchWithProgress(
@@ -54,7 +70,13 @@ export async function loadCity(cityKey) {
     `[cityData.js] Loaded ${features.length} features, bounds:`,
     bounds,
   );
-  return { features, suburbs, bounds };
+  const data = {
+    features,
+    suburbs,
+    bounds,
+  };
+  cityFile.data = data;
+  return data;
 }
 
 export async function loadAustraliaBounds() {
