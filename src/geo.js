@@ -19,6 +19,11 @@ const cityFiles = {
     bounds: "/geo/sydney.bounds.json",
     data: undefined,
   },
+  brisbane:{
+    suburbs: "/geo/city-of-brisbane.suburbs.json",
+    bounds: "/geo/city-of-brisbane.bounds.json",
+    data: undefined,
+  }
 };
 
 export async function loadCity(cityKey) {

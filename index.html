@@ -2,45 +2,68 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png" />
+    <link
+      rel="apple-touch-icon"
+      href="/apple-touch-icon.png" />
+    <link
+      rel="manifest"
+      href="/site.webmanifest" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no"
-    />
+      content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no" />
     <title>
       OzMapper - Melbourne & Sydney Geography Game | Explore Suburbs
     </title>
     <meta
       name="description"
-      content="Test your Melbourne & Sydney geography skills with OzMapper! Explore suburbs, challenge friends, and become the ultimate city navigator."
-    />
+      content="Test your Melbourne & Sydney geography skills with OzMapper! Explore suburbs, challenge friends, and become the ultimate city navigator." />
     <meta
       name="keywords"
-      content="Melbourne, Sydney, geography game, map explorer, suburbs, OzMapper, map game, leaflet, interactive map, geography quiz, find suburbs, learn suburbs"
-    />
-    <link rel="canonical" href="https://ozmapper.app/" />
+      content="Melbourne, Sydney, geography game, map explorer, suburbs, OzMapper, map game, leaflet, interactive map, geography quiz, find suburbs, learn suburbs" />
+    <link
+      rel="canonical"
+      href="https://ozmapper.app/" />
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="OzMapper" />
+    <meta
+      property="og:title"
+      content="OzMapper" />
     <meta
       property="og:description"
-      content="Test your Melbourne & Sydney geography skills! Find suburbs, challenge your friends, and become the ultimate city navigator!"
-    />
-    <meta property="og:image" content="/og.png" />
-    <meta property="og:url" content="https://ozmapper.app/" />
-    <meta property="og:type" content="website" />
+      content="Test your Melbourne & Sydney geography skills! Find suburbs, challenge your friends, and become the ultimate city navigator!" />
+    <meta
+      property="og:image"
+      content="/og.png" />
+    <meta
+      property="og:url"
+      content="https://ozmapper.app/" />
+    <meta
+      property="og:type"
+      content="website" />
 
     <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="OzMapper" />
+    <meta
+      name="twitter:card"
+      content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="OzMapper" />
     <meta
       name="twitter:description"
-      content="Test your Melbourne & Sydney geography skills! Find suburbs, challenge your friends, and become the ultimate city navigator!"
-    />
-    <meta name="twitter:image" content="/og.png" />
+      content="Test your Melbourne & Sydney geography skills! Find suburbs, challenge your friends, and become the ultimate city navigator!" />
+    <meta
+      name="twitter:image"
+      content="/og.png" />
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -57,7 +80,9 @@
   <body>
     <section id="map"></section>
     <!-- hero -->
-    <section id="hero" class="flex column justify-center align-center">
+    <section
+      id="hero"
+      class="flex column justify-center align-center">
       <h1 class="mb-M">OZ<small>MAPPER</small></h1>
       <section id="select-city-section">
         <button data-city="melbourne">
@@ -65,6 +90,9 @@
         </button>
         <button data-city="sydney">
           <h2>Sydney</h2>
+        </button>
+        <button data-city="brisbane">
+          <h2>Brisbane</h2>
         </button>
       </section>
       <section id="select-mode-section">
@@ -75,44 +103,65 @@
         <a
           href="https://github.com/graf-semmel/melb-mapper"
           target="_blank"
-          rel="noopener"
-        >
-          <img src="/github.svg" alt="GitHub" width="32" height="32" />
+          rel="noopener">
+          <img
+            src="/github.svg"
+            alt="GitHub"
+            width="32"
+            height="32" />
         </a>
         <a
           href="https://bsky.app/profile/graf-semmel.bsky.social"
           target="_blank"
-          rel="noopener"
-        >
-          <img src="/bluesky.svg" alt="Bluesky" width="32" height="32" />
+          rel="noopener">
+          <img
+            src="/bluesky.svg"
+            alt="Bluesky"
+            width="32"
+            height="32" />
         </a>
       </section>
-      <dialog id="progress-dialog" closedby="none">
+      <dialog
+        id="progress-dialog"
+        closedby="none">
         <main>
-          <progress value="0" max="100"></progress>
+          <progress
+            value="0"
+            max="100"></progress>
         </main>
       </dialog>
     </section>
 
     <!-- search -->
-    <section id="search" class="flex column justify-center hidden">
+    <section
+      id="search"
+      class="flex column justify-center hidden">
       <div class="flex column align-center">
-        <button data-action="back-to-menu" class="text-S">Back to Menu</button>
+        <button
+          data-action="back-to-menu"
+          class="text-S">
+          Back to Menu
+        </button>
         <h1>Search <strong class="secondary">Suburbs</strong></h1>
         <input
           type="text"
           id="input_suburbs"
           placeholder="Enter a suburb"
-          list="list_suburbs"
-        />
+          list="list_suburbs" />
         <datalist id="list_suburbs"></datalist>
       </div>
     </section>
 
     <!-- game -->
-    <section id="game" class="flex column justify-center hidden">
+    <section
+      id="game"
+      class="flex column justify-center hidden">
       <div class="flex column align-center">
-        <button data-action="back-to-menu" class="text-S">Back to Menu</button>
+        <button
+          data-action="back-to-menu"
+          class="text-S">
+          Back to Menu
+        </button>
         <hgroup>
           <h2 id="text_suburb">Find <strong>Brunswick</strong></h2>
           <p id="text_round">Round 1 of 5</p>
@@ -135,10 +184,16 @@
             </thead>
             <tbody></tbody>
           </table>
-          <button id="play_again" class="mb-M">Play Again</button>
+          <button
+            id="play_again"
+            class="mb-M">
+            Play Again
+          </button>
         </main>
       </dialog>
     </section>
-    <script type="module" src="./src/app.js"></script>
+    <script
+      type="module"
+      src="./src/app.js"></script>
   </body>
 </html>
