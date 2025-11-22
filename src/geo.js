@@ -7,15 +7,16 @@ import {
   publishLoadingCitySart,
 } from "./eventbus";
 
+const australiaFile = "/geo/australia.bounds.json";
 const cityFiles = {
   melbourne: {
-    suburbs: "/melbourne.suburbs.json",
-    bounds: "/melbourne.bounds.json",
+    suburbs: "/geo/melbourne.suburbs.json",
+    bounds: "/geo/melbourne.bounds.json",
     data: undefined,
   },
   sydney: {
-    suburbs: "/sydney.suburbs.json",
-    bounds: "/sydney.bounds.json",
+    suburbs: "/geo/sydney.suburbs.json",
+    bounds: "/geo/sydney.bounds.json",
     data: undefined,
   },
 };
@@ -50,11 +51,11 @@ export async function loadCity(cityKey) {
       } else {
         publishLoadingCityProgress(progress);
       }
-    },
+    }
   );
 
   const features = suburbsGeoJson.features.filter(
-    (f) => f.properties.name !== undefined,
+    (f) => f.properties.name !== undefined
   );
   const suburbs = features
     .map((f) => ({ name: f.properties.name }))
@@ -70,7 +71,7 @@ export async function loadCity(cityKey) {
   publishLoadingCityEnd();
   console.debug(
     `[cityData.js] Loaded ${features.length} features, bounds:`,
-    bounds,
+    bounds
   );
   const data = {
     features,
@@ -82,10 +83,9 @@ export async function loadCity(cityKey) {
 }
 
 export async function loadAustraliaBounds() {
-  const boundsFilePath = "/australia.bounds.json";
-  const boundsResp = await fetch(boundsFilePath);
+  const boundsResp = await fetch(australiaFile);
   if (!boundsResp.ok) {
-    throw new Error(`Failed to load ${boundsFilePath}`);
+    throw new Error(`Failed to load ${australiaFile}`);
   }
   const bounds = await boundsResp.json();
   console.debug("[cityData.js] Loaded Australia bounds:", bounds);
