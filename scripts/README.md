@@ -151,3 +151,6 @@ area(3600080500)->.searchArea;
 );
 out body;
 ```
+
+## Known Issues
+- Perth's suburbs are not clustered like other cities, leading to separate files for each local government area according to [Perth metropolitan region - Subregions and local government areas](https://en.wikipedia.org/wiki/Perth_metropolitan_region#Subregions_and_local_government_areas). The current script only collects suburbs from the "Inner Metro Area". Kings Park is not part of any local government area and is therefore not included.
