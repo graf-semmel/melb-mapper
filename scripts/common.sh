@@ -95,3 +95,65 @@ geocode_to_area_id() {
     debug "Geocoded to OSM $osm_type $osm_id (area ID: $area_id)"
     echo "$area_id"
 }
+
+# Build Overpass API query for city suburbs
+get_suburbs_query() {
+    local area_id="$1"
+    
+    cat <<EOF
+[out:json][timeout:25];
+area($area_id)->.searchArea;
+(
+    relation["boundary"="administrative"]["admin_level"="9"](area.searchArea);
+);
+out geom;
+EOF
+}
+
+# Fetch and save city suburbs as OSM JSON and GeoJSON
+fetch_and_save_suburbs() {
+    local city="$1"
+    local country="$2"
+    local filename="$3"
+    local output_dir="$4"
+
+    debug "Creating output directory if it doesn't exist: $output_dir"
+    mkdir -p "$output_dir"
+
+    debug "Geocoding location: $city, $country"
+    local area_id
+    area_id=$(geocode_to_area_id "$city, $country")
+    
+    debug "Preparing suburbs query for $city, $country (area ID: $area_id)"
+    local query
+    query=$(get_suburbs_query "$area_id")
+    debug "Query: $query"
+
+    make_overpass_request "$query" "${output_dir}/${filename}.suburbs.osm.json"
+    check_file_output "${output_dir}/${filename}.suburbs.osm.json" "Suburbs of $city (OSM format)"
+
+    debug "Converting OSM to GeoJSON..."
+    ../node_modules/osmtogeojson/osmtogeojson "${output_dir}/${filename}.suburbs.osm.json" |
+        jq -c '{
+        type,
+        features: [ .features[] | select(.geometry.type == "Polygon") | {
+            type: "Feature",
+            properties: {name: .properties.name},
+            geometry: {
+                type: "Polygon",
+                coordinates: .geometry.coordinates
+            }
+        }]}' >"${output_dir}/${filename}.suburbs.json"
+    check_file_output "${output_dir}/${filename}.suburbs.json" "Suburbs of $city (GeoJSON format)"
+
+    debug "Converting OSM to bounds..."
+    jq -c '[ .elements[] | select(.type=="relation") | .members[] |
+        select(.type=="way" and .role=="outer") | .geometry[]
+        ] | {
+            minlat: min_by(.lat).lat,
+            maxlat: max_by(.lat).lat,
+            minlon: min_by(.lon).lon,
+            maxlon: max_by(.lon).lon
+        }' "${output_dir}/${filename}.suburbs.osm.json" >"${output_dir}/${filename}.bounds.json"
+    check_file_output "${output_dir}/${filename}.bounds.json" "Bounds of $city"
+}

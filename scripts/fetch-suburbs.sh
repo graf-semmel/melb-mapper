@@ -9,11 +9,12 @@
 #   sh fetch-suburbs.sh [OPTIONS] CITY_NAME COUNTRY
 #
 # Options:
+#   -d DIR    Specify output directory (default: geo)
 #   -v        Enable verbose debug output
 #
 # Example:
 #   sh fetch-suburbs.sh -v "Melbourne" "Australia"
-#   sh fetch-suburbs.sh "Brisbane" "Australia"
+#   sh fetch-suburbs.sh -d "data" "Brisbane" "Australia"
 #
 # Output files are named using the city name in lowercase with spaces replaced by hyphens.
 
@@ -22,23 +23,28 @@ source "$(dirname "$0")/common.sh"
 
 # Parse options
 verbose=false
+output_dir="geo"
 city_name=""
 country_name=""
 
 # Print usage/help message
 usage() {
-    echo "Usage: $0 [-v] CITY_NAME COUNTRY"
+    echo "Usage: $0 [-v] [-d DIR] CITY_NAME COUNTRY"
     echo "  -v: Enable verbose debug messages"
+    echo "  -d: Output directory (default: geo)"
     echo "  CITY_NAME: Name of the city (required)"
     echo "  COUNTRY: Country name (required)"
     exit 1
 }
 
 # Parse command line options
-while getopts "v" opt; do
+while getopts "vd:" opt; do
     case $opt in
     v)
         verbose=true
+        ;;
+    d)
+        output_dir="$OPTARG"
         ;;
     *)
         usage
@@ -70,64 +76,6 @@ debug "City name processing complete:"
 debug "  City: $city_name"
 debug "  Country: $country_name"
 debug "  File name: $file_name"
+debug "  Output directory: $output_dir"
 
-# Build Overpass API query for city suburbs
-get_suburbs_query() {
-    local area_id="$1"
-    
-    cat <<EOF
-[out:json][timeout:25];
-area($area_id)->.searchArea;
-(
-    relation["boundary"="administrative"]["admin_level"="9"](area.searchArea);
-);
-out geom;
-EOF
-}
-
-# Fetch and save city suburbs as OSM JSON and GeoJSON
-fetch_and_save_suburbs() {
-    local city="$1"
-    local country="$2"
-    local filename="$3"
-
-    debug "Geocoding location: $city, $country"
-    local area_id
-    area_id=$(geocode_to_area_id "$city, $country")
-    
-    debug "Preparing suburbs query for $city, $country (area ID: $area_id)"
-    local query
-    query=$(get_suburbs_query "$area_id")
-    debug "Query: $query"
-
-    make_overpass_request "$query" "geo/${filename}.suburbs.osm.json"
-    check_file_output "geo/${filename}.suburbs.osm.json" "Suburbs of $city (OSM format)"
-
-    debug "Converting OSM to GeoJSON..."
-    ../node_modules/osmtogeojson/osmtogeojson "geo/${filename}.suburbs.osm.json" |
-        jq -c '{
-        type,
-        features: [ .features[] | select(.geometry.type == "Polygon") | {
-            type: "Feature",
-            properties: {name: .properties.name},
-            geometry: {
-                type: "Polygon",
-                coordinates: .geometry.coordinates
-            }
-        }]}' >"geo/${filename}.suburbs.json"
-    check_file_output "geo/${filename}.suburbs.json" "Suburbs of $city (GeoJSON format)"
-
-    debug "Converting OSM to bounds..."
-    jq -c '[ .elements[] | select(.type=="relation") | .members[] |
-        select(.type=="way" and .role=="outer") | .geometry[]
-        ] | {
-            minlat: min_by(.lat).lat,
-            maxlat: max_by(.lat).lat,
-            minlon: min_by(.lon).lon,
-            maxlon: max_by(.lon).lon
-        }' "geo/${filename}.suburbs.osm.json" >"geo/${filename}.bounds.json"
-    check_file_output "geo/${filename}.bounds.json" "Bounds of $city"
-}
-
-# Execute the appropriate function based on the selected option
-fetch_and_save_suburbs "$city_name" "$country_name" "$file_name"
+fetch_and_save_suburbs "$city_name" "$country_name" "$file_name" "$output_dir"
