@@ -136,13 +136,10 @@ fetch_and_save_suburbs() {
     ../node_modules/osmtogeojson/osmtogeojson "${output_dir}/${filename}.suburbs.osm.json" |
         jq -c '{
         type,
-        features: [ .features[] | select(.geometry.type == "Polygon") | {
+        features: [ .features[] | select(.geometry.type == "Polygon" or .geometry.type == "MultiPolygon") | {
             type: "Feature",
             properties: {name: .properties.name},
-            geometry: {
-                type: "Polygon",
-                coordinates: .geometry.coordinates
-            }
+            geometry: .geometry
         }]}' >"${output_dir}/${filename}.suburbs.json"
     check_file_output "${output_dir}/${filename}.suburbs.json" "Suburbs of $city (GeoJSON format)"
 
