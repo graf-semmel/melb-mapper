@@ -130,7 +130,6 @@ button {
   font-size: 1.2rem;
   cursor: pointer;
   font-weight: 600;
-  text-transform: uppercase;
   transition: all 0.2s;
   user-select: none;
   --color-shadow: rgba(0, 0, 0, 0.7);
