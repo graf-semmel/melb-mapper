@@ -9,8 +9,11 @@ This directory contains Bash scripts for downloading geographic data from OpenSt
 ### `fetch-capital-cities.sh`
 Downloads capital city data for a country.
 
-### `fetch-suburb.sh`
+### `fetch-suburbs.sh`
 Downloads suburb/administrative boundary data for a city.
+
+### `fetch-perth.sh`
+Downloads suburbs for all cities in Perth's Inner Metro Area and combines them into unified files.
 
 ### `common.sh`
 Shared utility functions used by the other scripts.
@@ -27,6 +30,8 @@ brew install jq curl
 npm install osmtogeojson
 ```
 
+**Note:** The scripts expect `osmtogeojson` to be installed via npm in the parent directory (`../node_modules/osmtogeojson/osmtogeojson`).
+
 ## Usage
 
 ### fetch-capital-cities.sh
@@ -39,40 +44,66 @@ sh fetch-capital-cities.sh [OPTIONS] COUNTRY_NAME
 
 **Options:**
 - `-v` : Enable verbose debug output
+- `-d DIR` : Specify output directory (default: geo)
 
 **Examples:**
 ```sh
 sh fetch-capital-cities.sh "Australia"
 sh fetch-capital-cities.sh -v "Germany"
-sh fetch-capital-cities.sh "United States"
+sh fetch-capital-cities.sh -d "data" "United States"
 ```
 
 **Output files** (for "Australia"):
 - `geo/australia.capital-cities.osm.json` - Raw OSM JSON
 - `geo/australia.capital-cities.json` - Simplified JSON with city names
 
-### fetch-suburb.sh
+### fetch-suburbs.sh
 
 Downloads suburb/administrative boundaries (admin_level 9) for a city.
 
 ```sh
-sh fetch-suburb.sh [OPTIONS] CITY_NAME COUNTRY
+sh fetch-suburbs.sh [OPTIONS] CITY_NAME COUNTRY
 ```
 
 **Options:**
 - `-v` : Enable verbose debug output
+- `-d DIR` : Specify output directory (default: geo)
 
 **Examples:**
 ```sh
-sh fetch-suburb.sh "Melbourne" "Australia"
-sh fetch-suburb.sh -v "Brisbane" "Australia"
-sh fetch-suburb.sh "Munich" "Germany"
+sh fetch-suburbs.sh "Melbourne" "Australia"
+sh fetch-suburbs.sh -v "Brisbane" "Australia"
+sh fetch-suburbs.sh -d "data" "Munich" "Germany"
 ```
 
 **Output files** (for "Melbourne"):
 - `geo/melbourne.suburbs.osm.json` - Raw OSM JSON
 - `geo/melbourne.suburbs.json` - GeoJSON with suburb polygons
 - `geo/melbourne.bounds.json` - Bounding box coordinates
+
+### fetch-perth.sh
+
+Fetches suburbs for multiple cities in Perth's Inner Metro Area and combines them into unified files.
+
+```sh
+sh fetch-perth.sh [OPTIONS]
+```
+
+**Options:**
+- `-v` : Enable verbose debug output
+
+**Example:**
+```sh
+sh fetch-perth.sh -v
+```
+
+**How it works:**
+1. Iterates through a predefined list of Perth Inner Metro Area cities (all commented out by default)
+2. Uncomment cities in the script to enable fetching
+3. Fetches suburbs for each city using `fetch_and_save_suburbs` function from `common.sh`
+4. Saves individual city files to `geo/perth/` directory
+5. Combines all suburbs into `geo/perth.suburbs.json` (deduplicated by suburb name)
+6. Creates combined bounding box in `geo/perth.bounds.json`
 
 ## Output Files
 
@@ -153,4 +184,4 @@ out body;
 ```
 
 ## Known Issues
-- Perth's suburbs are not clustered like other cities, leading to separate files for each local government area according to [Perth metropolitan region - Subregions and local government areas](https://en.wikipedia.org/wiki/Perth_metropolitan_region#Subregions_and_local_government_areas). The current script only collects suburbs from the "Inner Metro Area". Kings Park is not part of any local government area and is therefore not included.
+- **Perth suburbs structure:** Perth's suburbs are not clustered like other cities, leading to separate files for each local government area according to [Perth metropolitan region - Subregions and local government areas](https://en.wikipedia.org/wiki/Perth_metropolitan_region#Subregions_and_local_government_areas). The `fetch-perth.sh` script handles this by fetching suburbs for multiple Inner Metro Area cities and combining them. Kings Park is not part of any local government area and is therefore not included.
