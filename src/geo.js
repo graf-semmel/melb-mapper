@@ -20,13 +20,28 @@ const cityFiles = {
     data: undefined,
   },
   brisbane: {
-    suburbs: "/geo/city-of-brisbane.suburbs.json",
-    bounds: "/geo/city-of-brisbane.bounds.json",
+    suburbs: "/geo/brisbane.suburbs.json",
+    bounds: "/geo/brisbane.bounds.json",
     data: undefined,
   },
   perth: {
     suburbs: "/geo/perth.suburbs.json",
     bounds: "/geo/perth.bounds.json",
+    data: undefined,
+  },
+  adelaide: {
+    suburbs: "/geo/adelaide.suburbs.json",
+    bounds: "/geo/adelaide.bounds.json",
+    data: undefined,
+  },
+  darwin: {
+    suburbs: "/geo/city-of-darwin.suburbs.json",
+    bounds: "/geo/city-of-darwin.bounds.json",
+    data: undefined,
+  },
+  hobart: {
+    suburbs: "/geo/hobart.suburbs.json",
+    bounds: "/geo/hobart.bounds.json",
     data: undefined,
   },
 };
