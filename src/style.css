@@ -96,6 +96,11 @@ body {
   left: 0;
   padding: 1rem;
   color: var(--color);
+  pointer-events: none;
+
+  & button, & input {
+    pointer-events: auto;
+  }
 
   & input {
     padding: var(--input-padding);
@@ -104,6 +109,7 @@ body {
     color: var(--input-color);
     background-color: var(--input-bg);
     transition: border-color 0.1s ease, box-shadow 0.1s ease;
+
     &:focus {
       box-shadow: var(--input-focus-box-shadow);
       border-color: var(--input-focus-border-color);
