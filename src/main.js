@@ -4,18 +4,6 @@ import { Game } from "./game";
 import { createMap } from "./map";
 import * as geo from "./geo";
 
-function getCSSVarColor(key) {
-  const rootStyles = getComputedStyle(document.documentElement);
-  return rootStyles.getPropertyValue(key).trim();
-}
-
-const colors = [
-  getCSSVarColor("--color-map-1"),
-  getCSSVarColor("--color-map-2"),
-  getCSSVarColor("--color-map-3"),
-  getCSSVarColor("--color-map-4"),
-];
-
 // Declare map and game variables here, they will be initialized later
 let map;
 let game;
@@ -27,7 +15,6 @@ async function initializeApp() {
   console.debug("[main.js] Loading map");
   // Assign the created map to the module-level variable
   map = createMap({
-    colors,
     enableHover: true,
     bounds: boundsAustralia,
     onSelectLayer: (layer) => {

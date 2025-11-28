@@ -4,12 +4,11 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { generateColorPalette, setCSSVarColor } from "./utils";
 
 const tileLayers = {
   openstreetmap: {
-    url: `https://tile.openstreetmap.org/{z}/{x}/{y}${
-      L.Browser.retina ? "@2x.png" : ".png"
-    }`,
+    url: `https://tile.openstreetmap.org/{z}/{x}/{y}.png`,
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   },
@@ -20,6 +19,7 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
+    colors: ["#fac67a", "#69247c"],
   },
   carto_light: {
     url: `https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}${
@@ -28,20 +28,27 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
+    colors: ["#fac67a", "#69247c"],
+  },
+  carto_voyager: {
+    url: `https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}${
+      L.Browser.retina ? "@2x.png" : ".png"
+    }`,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: "abcd",
   },
 };
 
-function getColor(feature, colors) {
-  const index = feature.properties.name.length % colors.length;
-  return colors[index];
-}
+const selectedTileLayer = tileLayers.carto_dark;
+// setCSSVarColor("--color-primary", selectedTileLayer.colors[0]);
+// setCSSVarColor("--color-secondary", selectedTileLayer.colors[1]);
+selectedTileLayer.colors = generateColorPalette(selectedTileLayer.colors, 5);
 
 function createMap(options = {}) {
   let featureLayer = null;
 
   const mergedOptions = {
-    tileLayer: tileLayers.carto_dark,
-    colors: ["#111111", "#222222", "#333333", "#444444"],
     enableHover: true,
     ...options,
   };
@@ -64,25 +71,30 @@ function createMap(options = {}) {
   const map = L.map("map", mapOptions);
 
   function defaultStyle(feature) {
+    const index =
+      feature.properties.name.length % selectedTileLayer.colors.length;
+    const fillColor = selectedTileLayer.colors[index];
+
     return {
       weight: 2,
       opacity: 0.3,
       color: "#000",
       fillOpacity: 0.3,
-      fillColor: getColor(feature, mergedOptions.colors),
+      fillColor: fillColor,
     };
   }
 
   function highlighStyle(feature) {
+    console.debug("[map.js] Highlight style for feature:", feature);
     return {
-      color: "#fff",
-      fillOpacity: 0.8,
+      fillOpacity: 1,
     };
   }
 
-  L.tileLayer(mergedOptions.tileLayer.url, {
-    attribution: mergedOptions.tileLayer.attribution,
-    subdomains: mergedOptions.tileLayer.subdomains,
+  const { url, attribution, subdomains } = selectedTileLayer;
+  L.tileLayer(url, {
+    attribution: attribution,
+    // subdomains: subdomains,
   }).addTo(map);
 
   function onMouseOver(e) {
@@ -155,7 +167,7 @@ function createMap(options = {}) {
   function highlightFeature(
     featureName,
     className = "flicker-target",
-    duration = 1000,
+    duration = 1000
   ) {
     console.debug(`[map.js] Highlighting feature: ${featureName}`);
     featureLayer.eachLayer((layer) => {
@@ -183,7 +195,7 @@ function createMap(options = {}) {
   function setBounds(overpassBounds) {
     console.debug("[map.js] Setting map bounds:", overpassBounds);
     bounds = overpassBoundsToLatLngBounds(overpassBounds);
-    
+
     // Display the bounds on the map - will fail if features are loaded ¯\_(ツ)_/¯
     // const rectangle = L.rectangle(bounds, { color: "#ff7800", weight: 1 });
     // rectangle.addTo(map);
@@ -235,4 +247,4 @@ L.Layer.prototype.setInteractive = function (interactive) {
   }
 };
 
-export { createMap, tileLayers };
+export { createMap };

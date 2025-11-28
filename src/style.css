@@ -1,4 +1,4 @@
-:root {
+  :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-synthesis: none;
@@ -22,8 +22,8 @@
 
   /* Base Colors */
   --color-primary: #69247c;
-  --color-primary-text: #ffffff;
-  --color-secondary: rgba(250, 198, 122, 1);
+  --color-primary-text: #020202;
+  --color-secondary: #fac67a;
   --color-secondary-text: #242424;
   --color-danger: #e74c3c;
   --color-warning: #f1c40f;
@@ -31,16 +31,6 @@
   --background: #242424;
   --color: #eeeeee;
   --color-glow: rgba(250, 198, 122, 7);
-
-  /* Mao colors */
-  --color-map-1: var(--color-primary);
-  --color-map-2: var(--color-secondary);
-  --color-map-3: #da498d;
-  --color-map-4: #f9e6cf;
-  /* --color-map-1: #333333; */
-  /* --color-map-2: #444444; */
-  /* --color-map-3: #555555; */
-  /* --color-map-4: #666666; */
 
   /* Spacing */
   --space-XS: 0.25rem;
