@@ -1,4 +1,4 @@
-  :root {
+:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-synthesis: none;
@@ -30,7 +30,8 @@
   --color-info: #1abc9c;
   --background: #242424;
   --color: #eeeeee;
-  --color-glow: rgba(250, 198, 122, 7);
+  /* --color-glow: var(--color-primary); */
+  --color-glow: var(--color-secondary);
 
   /* Spacing */
   --space-XS: 0.25rem;
@@ -41,7 +42,7 @@
 
   /* Borders */
   --border-width: 1px;
-  --border-color: #555555;
+  --border-color: hsl(0, 0%, 50%);
   --border-radius: 4px;
 
   /* Form Controls */
@@ -63,6 +64,12 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 body {
@@ -88,7 +95,8 @@ body {
   color: var(--color);
   pointer-events: none;
 
-  & button, & input {
+  & button,
+  & input {
     pointer-events: auto;
   }
 
@@ -118,7 +126,6 @@ p {
 }
 
 button {
-  color: var(--color-secondary);
   background: transparent;
   padding: var(--input-padding);
   border: solid 1px transparent;
@@ -128,12 +135,13 @@ button {
   font-weight: 600;
   transition: all 0.2s;
   user-select: none;
-  --color-shadow: rgba(0, 0, 0, 0.7);
+  --color-shadow: rgba(0, 0, 0, 0.3);
   --translate: 1rem;
 
   &.selected,
   &:hover {
-    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
+    color: var(--color-secondary);
+    text-shadow: 0 0 2px var(--color-glow), 0 0 10px var(--color-glow),
       var(--translate) var(--translate) 5px var(--color-shadow),
       var(--translate) var(--translate) 10px var(--color-shadow);
   }
@@ -199,9 +207,9 @@ dialog {
 
 dialog:open {
   opacity: 1;
-  box-shadow: 0 0 1px var(--color-glow), var(--translate) var(--translate) 10px
-    var(--color-shadow), var(--translate) var(--translate) 20px
-    var(--color-shadow);
+  box-shadow: 0 0 1px var(--color-glow),
+    var(--translate) var(--translate) 10px var(--color-shadow),
+    var(--translate) var(--translate) 20px var(--color-shadow);
 }
 
 @media (max-width: 768px) {
@@ -285,7 +293,7 @@ dialog:open {
 }
 
 mark {
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   color: var(--color-secondary-text);
 }
 
@@ -323,18 +331,22 @@ mark {
     font-weight: 700;
     text-transform: uppercase;
     transform: scaleX(0.9);
-    color: var(--color-secondary);
+    color: var(--color-primary);
     opacity: 0;
     letter-spacing: -0.1rem;
     text-shadow: none;
     user-select: none;
     animation: hover-glow 1s ease-in-out forwards;
 
-    --color-glow: var(--color-secondary);
+    --color-glow: var(--color-primary);
     --color-shadow: rgba(0, 0, 0, 0.5);
 
     small {
-      font-size: clamp(calc(var(--font-size) * 0.5), 20vw, calc(var(--font-size) * 0.5));
+      font-size: clamp(
+        calc(var(--font-size) * 0.5),
+        20vw,
+        calc(var(--font-size) * 0.5)
+      );
     }
   }
 
@@ -371,8 +383,7 @@ mark {
 @keyframes hover-glow {
   100% {
     opacity: 1;
-    text-shadow:
-      0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
+    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
       0 0 40px var(--color-glow), 20px 20px 5px var(--color-shadow),
       20px 20px 10px var(--color-shadow);
   }
@@ -381,8 +392,7 @@ mark {
 @keyframes hover-glow-reverse {
   0% {
     opacity: 1;
-    text-shadow:
-      0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
+    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
       0 0 40px var(--color-glow), 20px 20px 5px var(--color-shadow),
       20px 20px 10px var(--color-shadow);
   }
@@ -421,13 +431,12 @@ mark {
 #select-mode-section button {
   pointer-events: none;
   opacity: 0.4;
-  color: var(--color);
 }
 
 /* Show the buttons only if a .selected button exists in #select-city-section */
 #select-city-section {
   button {
-    opacity: 0.5;
+    opacity: 0.7;
     &.selected,
     &:hover {
       opacity: 1;
@@ -437,7 +446,6 @@ mark {
   &:has(button.selected) ~ #select-mode-section button {
     pointer-events: auto;
     opacity: 1;
-    color: var(--color-secondary);
   }
 }
 
@@ -471,7 +479,7 @@ dialog#progress-dialog {
   progress {
     width: 90%;
     height: 2rem;
-    accent-color: var(--color-secondary);
+    accent-color: var(--color-primary);
   }
 }
 

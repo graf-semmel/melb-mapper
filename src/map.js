@@ -4,7 +4,7 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { generateColorPalette, setCSSVarColor } from "./utils";
+import { initColors } from "./utils";
 
 const tileLayers = {
   openstreetmap: {
@@ -19,7 +19,7 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
-    colors: ["#fac67a", "#69247c"],
+    primaryColor: "#85caffff",
   },
   carto_light: {
     url: `https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}${
@@ -28,7 +28,7 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
-    colors: ["#fac67a", "#69247c"],
+    primaryColor: "#47658dff",
   },
   carto_voyager: {
     url: `https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}${
@@ -37,13 +37,13 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
+    primaryColor: "#00ffeeff",
   },
 };
 
 const selectedTileLayer = tileLayers.carto_dark;
-// setCSSVarColor("--color-primary", selectedTileLayer.colors[0]);
-// setCSSVarColor("--color-secondary", selectedTileLayer.colors[1]);
-selectedTileLayer.colors = generateColorPalette(selectedTileLayer.colors, 5);
+
+const colors = initColors(selectedTileLayer.primaryColor);
 
 function createMap(options = {}) {
   let featureLayer = null;
@@ -71,9 +71,8 @@ function createMap(options = {}) {
   const map = L.map("map", mapOptions);
 
   function defaultStyle(feature) {
-    const index =
-      feature.properties.name.length % selectedTileLayer.colors.length;
-    const fillColor = selectedTileLayer.colors[index];
+    const index = feature.properties.name.length % colors.length;
+    const fillColor = colors[index];
 
     return {
       weight: 2,
@@ -85,7 +84,6 @@ function createMap(options = {}) {
   }
 
   function highlighStyle(feature) {
-    console.debug("[map.js] Highlight style for feature:", feature);
     return {
       fillOpacity: 1,
     };
