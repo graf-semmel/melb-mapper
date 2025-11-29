@@ -270,7 +270,7 @@ dialog:open {
 }
 
 .flicker-target {
-  color: var(--color-warning);
+  color: var(--color-primary);
   fill-opacity: 0.8;
   animation: flicker 0.2s ease-in-out infinite;
 }
