@@ -4,7 +4,7 @@
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { initColors } from "./utils";
+import { initTheme } from "./utils";
 
 const tileLayers = {
   openstreetmap: {
@@ -19,7 +19,9 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
-    primaryColor: "#85caffff",
+    theme: {
+      isDarkMode: true,
+    },
   },
   carto_light: {
     url: `https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}${
@@ -28,7 +30,9 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
-    primaryColor: "#47658dff",
+    theme: {
+      isDarkMode: false,
+    },
   },
   carto_voyager: {
     url: `https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}${
@@ -37,13 +41,15 @@ const tileLayers = {
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
-    primaryColor: "#00ffeeff",
+    theme: {
+      isDarkMode: false,
+    },
   },
 };
 
-const selectedTileLayer = tileLayers.carto_dark;
+const selectedTileLayer = tileLayers.carto_voyager;
 
-const colors = initColors(selectedTileLayer.primaryColor);
+const colors = initTheme(selectedTileLayer.theme);
 
 function createMap(options = {}) {
   let featureLayer = null;

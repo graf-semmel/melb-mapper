@@ -20,19 +20,6 @@
   --text-XL: 2rem;
   --text-XXL: 3rem;
 
-  /* Base Colors */
-  --color-primary: #69247c;
-  --color-primary-text: #020202;
-  --color-secondary: #fac67a;
-  --color-secondary-text: #242424;
-  --color-danger: #e74c3c;
-  --color-warning: #f1c40f;
-  --color-info: #1abc9c;
-  --background: #242424;
-  --color: #eeeeee;
-  /* --color-glow: var(--color-primary); */
-  --color-glow: var(--color-secondary);
-
   /* Spacing */
   --space-XS: 0.25rem;
   --space-S: 0.5rem;
@@ -40,23 +27,47 @@
   --space-L: 2rem;
   --space-XL: 4rem;
 
+  /* Theme Colors */
+  --background: #efefef;
+  --color: #132440;
+  --color-primary: #bf092f;
+  --color-primary-text: #efefef;
+  --color-primary-glow: rgb(246, 82, 93, 0.3);
+  --color-primary-shadow: rgb(119, 0, 0, 0.3);
+  --color-secondary: #16476a;
+  --color-secondary-text: #efefef;
+  --color-secondary-glow: rgb(59, 151, 151, 0.3);
+  --color-secondary-shadow: rgb(19, 36, 64, 0.3);
+
+  /* Base colors */
+  --color-danger: #e74c3c;
+  --color-warning: #f1c40f;
+  --color-info: #1abc9c;
+
   /* Borders */
   --border-width: 1px;
-  --border-color: hsl(0, 0%, 50%);
+  --border-color: hsla(0, 0%, 50%, 0.5);
   --border-radius: 4px;
 
   /* Form Controls */
-  --input-bg: #333333;
+  --input-bg: color-mix(in srgb, var(--background) 50%, transparent);
   --input-color: var(--color);
   --input-border: var(--border-width) solid var(--border-color);
   --input-padding: var(--space-S);
-  --input-hover-bg: #444444;
-  --input-focus-border-color: var(--color-primary);
-  --input-focus-box-shadow: 0 0 0 0.2em rgba(105, 36, 124, 0.5);
+  --input-focus-box-shadow: 0 0 0 0.2em var(--color-secondary-shadow);
+}
 
-  color-scheme: dark;
-  color: var(--color);
-  background-color: var(--background);
+[data-theme="dark"] {
+  --background: #121212;
+  --color: #eeeeee;
+  --color-primary: #FFA239;
+  --color-primary-text: #121212;
+  --color-primary-glow: #ffc37e4d;
+  --color-primary-shadow: #2019124d;
+  --color-secondary: #8CE4FF;
+  --color-secondary-text: #121212;
+  --color-secondary-glow: #c7e5ee4d;
+  --color-secondary-shadow: #385e694d;
 }
 
 /* Box sizing rules */
@@ -66,6 +77,12 @@
   box-sizing: border-box;
 }
 
+html {
+  color-scheme: light dark;
+  color: var(--color);
+  background-color: var(--background);
+}
+
 button,
 input,
 select,
@@ -73,6 +90,7 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
+  color: inherit;
 }
 
 body {
@@ -95,7 +113,6 @@ body {
   top: 0;
   left: 0;
   padding: 1rem;
-  color: var(--color);
   pointer-events: none;
 
   & button,
@@ -111,13 +128,10 @@ body {
     background-color: var(--input-bg);
     transition: border-color 0.1s ease, box-shadow 0.1s ease;
 
-    &:focus {
-      box-shadow: var(--input-focus-box-shadow);
-      border-color: var(--input-focus-border-color);
-      outline: none;
-    }
+    &:focus,
     &:hover {
-      background-color: var(--input-hover-bg);
+      box-shadow: var(--input-focus-box-shadow);
+      outline: none;
     }
   }
 }
@@ -138,15 +152,16 @@ button {
   font-weight: 600;
   transition: all 0.2s;
   user-select: none;
-  --color-shadow: rgba(0, 0, 0, 0.3);
-  --translate: 1rem;
+  --color-shadow: var(--color-secondary-shadow);
+  --color-glow: var(--color-secondary-glow);
+  --translate: 1em;
 
   &.selected,
   &:hover {
     color: var(--color-secondary);
-    text-shadow: 0 0 2px var(--color-glow), 0 0 10px var(--color-glow),
-      var(--translate) var(--translate) 5px var(--color-shadow),
-      var(--translate) var(--translate) 10px var(--color-shadow);
+    text-shadow: 0px 0px 3px var(--color-glow), 0px 0px 10px var(--color-glow),
+      var(--translate) var(--translate) 3px var(--color-shadow),
+      var(--translate) var(--translate) 20px var(--color-shadow);
   }
 
   &:focus {
@@ -201,17 +216,18 @@ dialog {
   opacity: 0;
   transition: all 0.4s ease-in-out allow-discrete;
   box-shadow: none;
-  background-color: #000000bb;
+  background-color: color-mix(in srgb, var(--background) 80%, transparent);
+  color: var(--color);
   border: none;
-  --color-glow: var(--color-secondary);
-  --color-shadow: rgba(0, 0, 0, 0.5);
+  --color-glow: var(--color-primary-glow);
+  --color-shadow: var(--color-primary-shadow);
   --translate: 2rem;
 }
 
 dialog:open {
   opacity: 1;
-  box-shadow: 0 0 1px var(--color-glow),
-    var(--translate) var(--translate) 10px var(--color-shadow),
+  box-shadow: 0 0 3px var(--color-glow), 0 0 10px var(--color-glow),
+    var(--translate) var(--translate) 3px var(--color-shadow),
     var(--translate) var(--translate) 20px var(--color-shadow);
 }
 
@@ -297,7 +313,7 @@ dialog:open {
 
 mark {
   background-color: var(--color-primary);
-  color: var(--color-secondary-text);
+  color: var(--color-primary-text);
 }
 
 @keyframes blink {
@@ -315,7 +331,6 @@ mark {
 #hero {
   position: absolute;
   z-index: 9999;
-  color: white;
   top: 0;
   left: 0;
   width: 100%;
@@ -341,8 +356,8 @@ mark {
     user-select: none;
     animation: hover-glow 1s ease-in-out forwards;
 
-    --color-glow: var(--color-primary);
-    --color-shadow: rgba(0, 0, 0, 0.5);
+    --color-glow: var(--color-primary-glow);
+    --color-shadow: var(--color-primary-shadow);
 
     small {
       font-size: clamp(
@@ -372,32 +387,35 @@ mark {
   a img {
     transition: all 0.2s;
     --color-shadow: rgba(0, 0, 0, 0.3);
-    --translate: 0.5rem;
+    --translate: 0.5em;
+    filter: drop-shadow(2px 2px 0px var(--color-shadow));
 
     &:hover {
       filter: drop-shadow(
-          var(--translate) var(--translate) 3px var(--color-shadow)
+          var(--translate) var(--translate) 2px var(--color-shadow)
         )
-        drop-shadow(var(--translate) var(--translate) 5px var(--color-shadow));
+        drop-shadow(var(--translate) var(--translate) 10px var(--color-shadow));
     }
   }
 }
 
 @keyframes hover-glow {
   100% {
+    --translate: 20px;
     opacity: 1;
-    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
-      0 0 40px var(--color-glow), 20px 20px 5px var(--color-shadow),
-      20px 20px 10px var(--color-shadow);
+    text-shadow: 0 0 3px var(--color-glow), 0 0 10px var(--color-glow),
+      var(--translate) var(--translate) 3px var(--color-shadow),
+      var(--translate) var(--translate) 20px var(--color-shadow);
   }
 }
 
 @keyframes hover-glow-reverse {
   0% {
+    --translate: 20px;
     opacity: 1;
-    text-shadow: 0 0 5px var(--color-glow), 0 0 10px var(--color-glow),
-      0 0 40px var(--color-glow), 20px 20px 5px var(--color-shadow),
-      20px 20px 10px var(--color-shadow);
+    text-shadow: 0 0 3px var(--color-glow), 0 0 10px var(--color-glow),
+      var(--translate) var(--translate) 3px var(--color-shadow),
+      var(--translate) var(--translate) 20px var(--color-shadow);
   }
   100% {
     opacity: 0;
@@ -436,16 +454,8 @@ mark {
   opacity: 0.4;
 }
 
-/* Show the buttons only if a .selected button exists in #select-city-section */
 #select-city-section {
-  button {
-    opacity: 0.7;
-    &.selected,
-    &:hover {
-      opacity: 1;
-    }
-  }
-
+  /* Show the buttons only if a .selected button exists in #select-city-section */
   &:has(button.selected) ~ #select-mode-section button {
     pointer-events: auto;
     opacity: 1;

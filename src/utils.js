@@ -1,10 +1,21 @@
 import chroma from "chroma-js";
 
-export function initColors(primaryColor) {
-  const secondaryColor = generateComplementaryColor(primaryColor);
-  setCSSVarColor("--color-primary", primaryColor);
-  setCSSVarColor("--color-secondary", secondaryColor);
+export function initTheme(theme) {
+  const { isDarkMode } = theme;
+  initDarkMode(isDarkMode);
+
+  const primaryColor = getCSSVarColor("--color-primary");
+  const secondaryColor = getCSSVarColor("--color-secondary");
+  // const secondaryColor = generateComplementaryColor(primaryColor);
+  // setCSSVarColor("--color-primary", primaryColor);
+  // setCSSVarColor("--color-secondary", secondaryColor);
   return generateColorPalette([primaryColor, secondaryColor], 5);
+}
+
+function initDarkMode(isDarkMode){
+  if (isDarkMode) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
 }
 
 export function generateComplementaryColor(color) {
