@@ -26,7 +26,7 @@ function transitionFromHero(nextSectionId) {
       heroSection.classList.remove("animate-out");
       document.getElementById(nextSectionId).classList.remove("hidden");
     },
-    { once: true },
+    { once: true }
   );
   heroSection.classList.add("animate-out");
 }
@@ -66,7 +66,7 @@ for (const btn of citySelectBtns) {
 
 // --- SEARCH SECTION ---
 const backToMenuBtn = document.querySelector(
-  '#search button[data-action="back-to-menu"]',
+  '#search button[data-action="back-to-menu"]'
 );
 const suburbsDataList = document.getElementById("list_suburbs");
 const suburbInput = document.getElementById("input_suburbs");
@@ -105,7 +105,7 @@ const summaryDialog = document.getElementById("summary");
 const table = document.querySelector("#table_summary tbody");
 const playAgainBtn = document.getElementById("play_again");
 const backToMenuBtn2 = document.querySelector(
-  '#game button[data-action="back-to-menu"]',
+  '#game button[data-action="back-to-menu"]'
 );
 
 playAgainBtn.addEventListener("click", () => {
@@ -122,6 +122,17 @@ backToMenuBtn2.addEventListener("click", () => {
   document.getElementById("hero").classList.remove("hidden");
 });
 
+// add ESC event to close summary dialog and go back to menu
+summaryDialog.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    game.stop();
+    summaryDialog.close();
+    resetZoom();
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("hero").classList.remove("hidden");
+  }
+});
+
 function updateGame(state) {
   const { currentRound, rounds, gameFinished } = state;
   const score = rounds.reduce((acc, round) => acc + round.getScore(), 0);
@@ -134,7 +145,9 @@ function updateGame(state) {
         <td>${round.index}</td>
         <td>${round.suburb}</td>
         <td>${round.getGuessedSuburb()}</td>
-        <td>${round.isGuessedCorrectly() ? '<span class="secondary">✔︎<span>' : "❌"}</td>
+        <td>${
+          round.isGuessedCorrectly() ? '<span class="secondary">✔︎<span>' : "❌"
+        }</td>
       `;
       table.appendChild(row);
     }
@@ -150,9 +163,8 @@ function updateGame(state) {
   }
 
   suburbEl.innerHTML = `Find <strong><mark>${currentRound.suburb}</mark></strong>`;
-  const roundString = `Round <strong class="secondary">${currentRound.index}</strong> of ${rounds.length}`;
-  const timeLeftClass =
-    currentRound.getTimeLeft() <= 3 ? "danger" : "secondary";
+  const roundString = `Round <strong>${currentRound.index}</strong> of ${rounds.length}`;
+  const timeLeftClass = currentRound.getTimeLeft() <= 3 ? "danger" : "";
   const timeLeftString = `Time left <strong class="${timeLeftClass}">${currentRound.getTimeLeft()}</strong>s`;
   roundEl.innerHTML = `${roundString} | ${timeLeftString}`;
 }
