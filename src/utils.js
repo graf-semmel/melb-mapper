@@ -3,16 +3,23 @@ import chroma from "chroma-js";
 export function initTheme(theme) {
   const { isDarkMode } = theme;
   initDarkMode(isDarkMode);
+  return loadMapColors();
 
-  const primaryColor = getCSSVarColor("--color-primary");
-  const secondaryColor = getCSSVarColor("--color-secondary");
-  // const secondaryColor = generateComplementaryColor(primaryColor);
-  // setCSSVarColor("--color-primary", primaryColor);
-  // setCSSVarColor("--color-secondary", secondaryColor);
-  return generateColorPalette([primaryColor, secondaryColor], 5);
+  // const primaryColor = getCSSVarColor("--color-primary");
+  // const secondaryColor = getCSSVarColor("--color-secondary");
+  // return generateColorPalette([primaryColor, secondaryColor], 5);
 }
 
-function initDarkMode(isDarkMode){
+function loadMapColors() {
+  const colors = [];
+  for (let i = 1; i <= 5; i++) {
+    colors.push(`#${getCSSVarColor(`--color-map-${i}`)}`);
+    logColor(`Map Color ${i}`, colors[i - 1]);
+  }
+  return colors;
+}
+
+function initDarkMode(isDarkMode) {
   if (isDarkMode) {
     document.documentElement.setAttribute("data-theme", "dark");
   }

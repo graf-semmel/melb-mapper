@@ -28,16 +28,21 @@
   --space-XL: 4rem;
 
   /* Theme Colors */
-  --background: #efefef;
-  --color: #132440;
-  --color-primary: #bf092f;
-  --color-primary-text: #efefef;
-  --color-primary-glow: rgb(246, 82, 93, 0.3);
-  --color-primary-shadow: rgb(119, 0, 0, 0.3);
-  --color-secondary: #16476a;
-  --color-secondary-text: #efefef;
-  --color-secondary-glow: rgb(59, 151, 151, 0.3);
-  --color-secondary-shadow: rgb(19, 36, 64, 0.3);
+  --background: #dbd8dd;
+  --color: #17181d;
+  --color-primary: #b76e8a;
+  --color-primary-text: #17181d;
+  --color-secondary: #7bbed2;
+  --color-secondary-text: #17181d;
+  --color-shadow-base: #17181d;
+  --color-shadow: color-mix(in srgb, var(--color-shadow-base) 50%, transparent);
+
+  /* map colors */
+  --color-map-1: #387385;
+  --color-map-2: #7bbed2;
+  --color-map-3: #dbd8dd;
+  --color-map-4: #e3b5bf;
+  --color-map-5: #b76e8a;
 
   /* Base colors */
   --color-danger: #e74c3c;
@@ -46,15 +51,15 @@
 
   /* Borders */
   --border-width: 1px;
-  --border-color: hsla(0, 0%, 50%, 0.5);
+  --border-color: var(--color-shadow-base);
   --border-radius: 4px;
 
   /* Form Controls */
-  --input-bg: color-mix(in srgb, var(--background) 50%, transparent);
+  --input-bg: color-mix(in srgb, var(--background) 80%, transparent);
   --input-color: var(--color);
   --input-border: var(--border-width) solid var(--border-color);
   --input-padding: var(--space-S);
-  --input-focus-box-shadow: 0 0 0 0.2em var(--color-secondary-shadow);
+  --input-focus-box-shadow: 0 0 0 0.2em var(--color-secondary);
 }
 
 [data-theme="dark"] {
@@ -152,22 +157,14 @@ button {
   font-weight: 600;
   transition: all 0.2s;
   user-select: none;
-  /* --color-glow: var(--color-secondary-glow); */
-  --color-glow: transparent;
-  --color-shadow: var(--color-secondary-shadow);
-  --translate: 0.5em;
-  text-shadow: 0px 0px 3px var(--color-glow), 0px 0px 10px var(--color-glow),
-    var(--translate) var(--translate) 3px var(--color-shadow),
-    var(--translate) var(--translate) 20px var(--color-shadow);
 
   &.selected,
   &:hover {
-    color: var(--color-secondary);
     text-decoration: underline;
-    --translate: 0.6em;
-    /* text-shadow: 0px 0px 3px var(--color-glow), 0px 0px 10px var(--color-glow), */
-      /* var(--translate) var(--translate) 3px var(--color-shadow), */
-      /* var(--translate) var(--translate) 20px var(--color-shadow); */
+    --color-shadow: var(--color-secondary);
+    --translate: 0.1em;
+    text-shadow: var(--translate) var(--translate) 1px var(--color-shadow),
+      var(--translate) var(--translate) 3px var(--color-shadow);
   }
 
   &:focus {
@@ -222,18 +219,17 @@ dialog {
   opacity: 0;
   transition: all 0.4s ease-in-out allow-discrete;
   box-shadow: none;
-  background-color: color-mix(in srgb, var(--background) 80%, transparent);
-  color: var(--color);
+  background-color: color-mix(in srgb, var(--background) 90%, transparent);
+  color: var(--color-primary-);
   border: none;
-  --color-glow: var(--color-primary-glow);
-  --color-shadow: var(--color-primary-shadow);
-  --translate: 2rem;
+  border-radius: var(--border-radius);
+  --color-glow: var(--color-primary);
+  --translate: 1rem;
 }
 
 dialog:open {
   opacity: 1;
-  box-shadow: 0 0 3px var(--color-glow), 0 0 10px var(--color-glow),
-    var(--translate) var(--translate) 3px var(--color-shadow),
+  box-shadow: var(--translate) var(--translate) 5px var(--color-shadow),
     var(--translate) var(--translate) 20px var(--color-shadow);
 }
 
@@ -241,7 +237,6 @@ dialog:open {
   dialog {
     max-width: 100%;
     max-height: 100%;
-    background: #000000dd;
   }
 }
 
@@ -362,9 +357,6 @@ mark {
     user-select: none;
     animation: hover-glow 1s ease-in-out forwards;
 
-    --color-glow: var(--color-primary-glow);
-    --color-shadow: var(--color-primary-shadow);
-
     small {
       font-size: clamp(
         calc(var(--font-size) * 0.5),
@@ -409,8 +401,7 @@ mark {
   100% {
     --translate: 20px;
     opacity: 1;
-    text-shadow: 0 0 3px var(--color-glow), 0 0 10px var(--color-glow),
-      var(--translate) var(--translate) 3px var(--color-shadow),
+    text-shadow: var(--translate) var(--translate) 3px var(--color-shadow),
       var(--translate) var(--translate) 20px var(--color-shadow);
   }
 }
@@ -419,8 +410,7 @@ mark {
   0% {
     --translate: 20px;
     opacity: 1;
-    text-shadow: 0 0 3px var(--color-glow), 0 0 10px var(--color-glow),
-      var(--translate) var(--translate) 3px var(--color-shadow),
+    text-shadow: var(--translate) var(--translate) 3px var(--color-shadow),
       var(--translate) var(--translate) 20px var(--color-shadow);
   }
   100% {
