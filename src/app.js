@@ -151,7 +151,7 @@ function updateGame(state) {
       `;
       table.appendChild(row);
     }
-    scoreEl.innerHTML = `Your final score is <strong>${score}</strong>`;
+    scoreEl.innerHTML = `Your final score is <strong><mark>${score}</mark></strong>`;
   }
 
   if (gameFinished) {

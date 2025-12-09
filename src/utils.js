@@ -13,7 +13,7 @@ export function initTheme(theme) {
 function loadMapColors() {
   const colors = [];
   for (let i = 1; i <= 5; i++) {
-    colors.push(`#${getCSSVarColor(`--color-map-${i}`)}`);
+    colors.push(`#${getCSSVarColor(`--color-theme-${i}`)}`);
     logColor(`Map Color ${i}`, colors[i - 1]);
   }
   return colors;

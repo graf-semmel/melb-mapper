@@ -47,7 +47,7 @@ const tileLayers = {
   },
 };
 
-const selectedTileLayer = tileLayers.carto_voyager;
+const selectedTileLayer = tileLayers.carto_light
 
 const colors = initTheme(selectedTileLayer.theme);
 
