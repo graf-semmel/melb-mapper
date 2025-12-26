@@ -47,7 +47,8 @@ const tileLayers = {
   },
 };
 
-const selectedTileLayer = import.meta.env.VITE_DARK_MODE === "true"
+const selectedTileLayer = window.matchMedia("(prefers-color-scheme: dark)")
+  .matches
   ? tileLayers.carto_dark
   : tileLayers.carto_light;
 

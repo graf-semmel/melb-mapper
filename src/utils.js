@@ -2,7 +2,7 @@ import chroma from "chroma-js";
 
 export function initTheme(theme) {
   const { isDarkMode } = theme;
-  initDarkMode(isDarkMode);
+  // Dark mode is now handled automatically by CSS @media (prefers-color-scheme: dark)
   return loadMapColors();
 
   // const primaryColor = getCSSVarColor("--color-primary");
@@ -17,12 +17,6 @@ function loadMapColors() {
     logColor(`Map Color ${i}`, colors[i - 1]);
   }
   return colors;
-}
-
-function initDarkMode(isDarkMode) {
-  if (isDarkMode) {
-    document.documentElement.setAttribute("data-theme", "dark");
-  }
 }
 
 export function generateComplementaryColor(color) {
