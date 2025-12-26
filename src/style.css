@@ -42,7 +42,7 @@
   --color-primary-text: var(--color-theme-6);
   --color-secondary: var(--color-theme-2);
   --color-secondary-text: var(--color-theme-6);
-  --color-shadow-base: var(--color-theme-6);
+  --color-shadow-base: var(--color);
   --color-shadow: color-mix(in srgb, var(--color-shadow-base) 50%, transparent);
 
   /* Base colors */
@@ -54,6 +54,8 @@
   --border-width: 1px;
   --border-color: var(--color-shadow-base);
   --border-radius: 4px;
+  --border: var(--border-width) solid var(--border-color);
+
 
   /* Form Controls */
   --input-bg: color-mix(in srgb, var(--background) 80%, transparent);
@@ -71,13 +73,13 @@
   --color-theme-5: #868fbe;
   --color-theme-6: #1c100c;
 
-  --background: #1c100c;
+  --background: #121212;
   --color: #f3ddcb;
   --color-primary: #868fbe;
   --color-primary-text: #1c100c;
   --color-secondary: #f68165;
   --color-secondary-text: #1c100c;
-  --color-shadow-base: #1c100c;
+  --color-shadow-base: var(--background);
 }
 
 /* Box sizing rules */
@@ -450,9 +452,18 @@ mark {
   gap: var(--space-M);
 }
 
-#select-mode-section button {
-  pointer-events: none;
-  opacity: 0.4;
+#select-mode-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-bottom: var(--border);
+  border-top: var(--border);
+  background: color-mix(in srgb, var(--background) 70%, transparent);
+
+  button {
+    pointer-events: none;
+    opacity: 0.4;
+  }
 }
 
 #select-city-section {

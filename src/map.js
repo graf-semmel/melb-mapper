@@ -47,7 +47,9 @@ const tileLayers = {
   },
 };
 
-const selectedTileLayer = tileLayers.carto_dark
+const selectedTileLayer = import.meta.env.VITE_DARK_MODE === "true"
+  ? tileLayers.carto_dark
+  : tileLayers.carto_light;
 
 const colors = initTheme(selectedTileLayer.theme);
 

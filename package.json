@@ -28,6 +28,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --open",
+    "dev:dark": "VITE_DARK_MODE=true vite --open",
     "build": "vite build",
     "preview": "vite --open preview",
     "format": "npx @biomejs/biome format --write .",
