@@ -15,8 +15,6 @@ const startGameBtn = document.getElementById("start_game");
 const searchSuburbsBtn = document.getElementById("search_suburbs");
 const heroSection = document.getElementById("hero");
 const selectCitySection = document.getElementById("select-city-section");
-const progressDialog = document.getElementById("progress-dialog");
-const progressBar = progressDialog.querySelector("progress");
 
 function transitionFromHero(nextSectionId) {
   heroSection.addEventListener(
@@ -173,15 +171,18 @@ subscribeToGameState((state) => {
   updateGame(state);
 });
 
+const progressDialog = document.getElementById("progress-dialog");
+// progress bar doesn't work correctly with CloudFlare
+// const progressBar = progressDialog.querySelector("progress");
 subscribeToLoadingCityState((state) => {
   if (state.state === "start") {
-    progressBar.setAttribute("value", 0);
+    // progressBar.setAttribute("value", 0);
     progressDialog.showModal();
   } else if (state.state === "end") {
     progressDialog.close();
   } else if (state.state === "progress") {
-    progressBar.value = state.progress;
+    // progressBar.value = state.progress;
   } else if (state.state === "indeterminate") {
-    progressBar.removeAttribute("value");
+    // progressBar.removeAttribute("value");
   }
 });

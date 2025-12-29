@@ -491,8 +491,8 @@ h3 {
 }
 
 dialog#progress-dialog {
-  height: 20%;
-  width: 80%;
+  height: 100vh;
+  width: 100vw;
 
   main {
     height: 100%;
@@ -502,11 +502,11 @@ dialog#progress-dialog {
     align-items: center;
   }
 
-  progress {
+  /* progress {
     width: 90%;
     height: 2rem;
     accent-color: var(--color-primary);
-  }
+  } */
 }
 
 .bt {
@@ -514,4 +514,83 @@ dialog#progress-dialog {
 }
 .bb {
   border-bottom: var(--border-width) solid var(--border-color);
+}
+/* HTML: <div class="loader"></div> */
+.loader-text {
+  width: fit-content;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 30px;
+  color: #0000;
+  background: linear-gradient(
+      90deg,
+      var(--color) calc(50% - 0.5ch),
+      var(--color-secondary) 0 calc(50% + 0.5ch),
+      var(--color) 0
+    )
+    right/calc(200% + 1ch) 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: l8 2s infinite steps(11);
+}
+.loader-text:before {
+  content: "Loading...";
+}
+@keyframes l8 {
+  to {
+    background-position: left;
+  }
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 74px;
+  height: calc(27px * 0.866 + 6px);
+  display: grid;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  grid-area: 1/1;
+  background: var(--color-secondary);
+  --c1: conic-gradient(from 150deg at top, #000 60deg, #0000 0);
+  --c2: conic-gradient(from -30deg at bottom, #000 60deg, #0000 0);
+  --s: 27px calc(27px * 0.866);
+  clip-path: polygon(17px 0, calc(100% - 17px) 0, 100% 100%, 0 100%);
+  -webkit-mask: var(--c1) left 6px top 4px, var(--c2) center,
+    var(--c1) right 6px top 4px, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  -webkit-mask-repeat: no-repeat;
+  animation: l6 1s infinite both;
+}
+.loader:after {
+  transform: rotate(180deg);
+  transform-origin: 50% 99%;
+  animation-delay: 0.5s;
+}
+@keyframes l6 {
+  0% {
+    -webkit-mask-size: 0 0, 0 0, 0 0, auto;
+  }
+  8.33% {
+    -webkit-mask-size: var(--s), 0 0, 0 0, auto;
+  }
+  16.67% {
+    -webkit-mask-size: var(--s), var(--s), 0 0, auto;
+  }
+  25%,
+  50% {
+    -webkit-mask-size: var(--s), var(--s), var(--s), auto;
+  }
+  58.33% {
+    -webkit-mask-size: 0 0, var(--s), var(--s), auto;
+  }
+  66.67% {
+    -webkit-mask-size: 0 0, 0 0, var(--s), auto;
+  }
+  75%,
+  100% {
+    -webkit-mask-size: 0 0, 0 0, 0 0, auto;
+  }
 }
